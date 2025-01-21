@@ -13,7 +13,7 @@ function App() {
     });
   }, []);
 
-  function getNewTree(nodeItems) {
+  const getNewTree = (nodeItems) => {
     const getNewTreeResult = [];
 
     function recursive(node) {
@@ -29,9 +29,9 @@ function App() {
       }
       return getNewTreeResult;
     }
-    const getNewTree = recursive(nodeItems);
-    setUrlNewList(getNewTree);
-  }
+    const newTree = recursive(nodeItems);
+    setUrlNewList(newTree);
+  };
   return (
     <>
       <ExtensionTopContent urlNewList={urlNewList} />
