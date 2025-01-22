@@ -1,5 +1,8 @@
 import { faDesktop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useContext } from "react";
+
+import UrlInfoContext from "../../../context/UrlInfoContext";
 
 function GnbButton({ iconShapeType }) {
   return (
@@ -9,7 +12,9 @@ function GnbButton({ iconShapeType }) {
   );
 }
 
-export default function GlobalNavigationBar({ urlNewList }) {
+export default function GlobalNavigationBar() {
+  const [urlNewList] = useContext(UrlInfoContext);
+
   return (
     <div className="w-full text-white flex mb-3 items-center">
       <p className="grow">

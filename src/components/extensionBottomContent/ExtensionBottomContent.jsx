@@ -1,4 +1,10 @@
-function UrlBox({ urlNewList }) {
+import { useContext } from "react";
+
+import UrlInfoContext from "../../context/UrlInfoContext";
+
+function UrlBox() {
+  const [urlNewList] = useContext(UrlInfoContext);
+
   return (
     <li>
       {urlNewList.map((url, index) => {
@@ -17,10 +23,10 @@ function UrlBox({ urlNewList }) {
   );
 }
 
-export default function ExtensionBottomContent({ urlNewList }) {
+export default function ExtensionBottomContent() {
   return (
     <ul className="p-3 w-full h-20">
-      <UrlBox urlNewList={urlNewList} />
+      <UrlBox />
     </ul>
   );
 }
