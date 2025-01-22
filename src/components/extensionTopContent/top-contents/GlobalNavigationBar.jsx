@@ -9,7 +9,7 @@ function GnbButton({ iconShapeType }) {
   );
 }
 
-export default function GnbBox({ urlNewList }) {
+export default function GlobalNavigationBar({ urlNewList }) {
   return (
     <div className="w-full text-white flex mb-3 items-center">
       <p className="grow">

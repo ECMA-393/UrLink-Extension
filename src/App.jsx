@@ -10,6 +10,7 @@ function App() {
   useEffect(() => {
     chrome.bookmarks.getTree((treeList) => {
       getNewTree(treeList);
+      console.log("count");
     });
   }, []);
 
