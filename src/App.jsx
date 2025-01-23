@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import ExtensionBottomContent from "./components/extensionBottomContent/extensionBottomContent";
 import ExtensionTopContent from "./components/extensionTopContent/extensionTopContent";
-import UrlInfoContext from "./context/UrlInfoContext";
+import ExtensionContext from "./context/ExtensionContext";
 
 function App() {
   const [urlNewList, setUrlNewList] = useState([]);
@@ -34,10 +34,10 @@ function App() {
     setUrlNewList(newTree);
   };
   return (
-    <UrlInfoContext.Provider value={[urlNewList, setUrlNewList]}>
+    <ExtensionContext.Provider value={[urlNewList, setUrlNewList]}>
       <ExtensionTopContent />
       <ExtensionBottomContent />
-    </UrlInfoContext.Provider>
+    </ExtensionContext.Provider>
   );
 }
 

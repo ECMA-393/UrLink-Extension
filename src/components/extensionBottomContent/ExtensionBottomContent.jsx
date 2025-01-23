@@ -1,10 +1,10 @@
 /* global chrome */
 import { useContext } from "react";
 
-import UrlInfoContext from "../../context/UrlInfoContext";
+import ExtensionContext from "../../context/ExtensionContext";
 
 function UrlBox() {
-  const [urlNewList] = useContext(UrlInfoContext);
+  const [urlNewList] = useContext(ExtensionContext);
 
   function faviconURL(u) {
     const url = new URL(chrome.runtime.getURL("/_favicon/"));
