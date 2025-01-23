@@ -2,47 +2,73 @@ import { useCallback, useEffect, useState } from "react";
 
 import { SERVER_URL } from "../constants/constants";
 
-const useFetchUrlContent = (bookmarkUrlArray, keyword) => {
-  const [crawledResult, setCrawledResult] = useState([]);
+const useFetchUrlContent = (setCrawledResult, savedList) => {
+  const [keyword, setKeyword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const getCrawledData = useCallback(async () => {
     try {
-      const fetchEncodedUrlList = bookmarkUrlArray.map((bookmarkUrl) => {
-        const encodedUrl = encodeURIComponent(bookmarkUrl);
+      setError(null);
+      const fetchEncodedUrlList = savedList.map((bookmark) => {
+        const encodedUrl = encodeURIComponent(bookmark.url);
 
         if (keyword) {
           return fetch(
             `${SERVER_URL}/crawl/${encodedUrl}/search?keyword=${keyword}`
           );
         } else {
-          return fetch(`${SERVER_URL}/crawl/${encodedUrl}`);
+          setCrawledResult(savedList);
         }
       });
 
-      const fetchedResultList = await Promise.allSettled(fetchEncodedUrlList);
-      const fetchResultJsonList = [];
+      if (keyword) {
+        const fetchedResultList = await Promise.allSettled(fetchEncodedUrlList);
+        const fetchedParseList = [];
 
-      for (const fetchedResult of fetchedResultList) {
-        if (fetchedResult.status === "fulfilled") {
-          fetchResultJsonList.push(await fetchedResult.value.json());
+        for (const fetchedResult of fetchedResultList) {
+          if (fetchedResult.status === "fulfilled") {
+            const fetchedResultValue = fetchedResult.value;
+
+            if (fetchedResultValue.ok) {
+              fetchedParseList.push(await fetchedResultValue.json());
+            }
+          }
         }
+
+        const filterdList = fetchedParseList.filter((filterdItem) => {
+          if (filterdItem.hasKeyword) {
+            return filterdItem;
+          }
+        });
+
+        if (filterdList.length === 0) {
+          setError("검색 결과가 없습니다.");
+        }
+
+        setCrawledResult(
+          filterdList.map((filterdItem) => {
+            for (let i = 0; i < savedList.length; i++) {
+              if (savedList[i].url === filterdItem.url) {
+                return { ...filterdItem, ...savedList[i] };
+              }
+            }
+          })
+        );
       }
 
-      setCrawledResult(fetchResultJsonList);
       setIsLoading(false);
     } catch (error) {
       setError(error);
     }
-  }, [bookmarkUrlArray, keyword]);
+  }, [keyword, savedList, setCrawledResult]);
 
   useEffect(() => {
     setIsLoading(true);
     getCrawledData();
-  }, []);
+  }, [getCrawledData]);
 
-  return [crawledResult, isLoading, error];
+  return [setKeyword, isLoading, error];
 };
 
 export default useFetchUrlContent;
