@@ -13,12 +13,12 @@ function GnbButton({ iconShapeType }) {
 }
 
 export default function GlobalNavigationBar() {
-  const [urlNewList] = useContext(ExtensionContext);
+  const { bookmarkList } = useContext(ExtensionContext);
 
   return (
     <div className="w-full text-white flex mb-3 items-center">
       <p className="grow">
-        <span className="text-2xl">{urlNewList.length}</span>
+        <span className="text-2xl">{bookmarkList.length}</span>
         <span className="text-sm">개의 북마크</span>
       </p>
       <div className="flex text-white">

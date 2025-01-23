@@ -4,7 +4,7 @@ import { useContext } from "react";
 import ExtensionContext from "../../context/ExtensionContext";
 
 function UrlBox() {
-  const [urlNewList] = useContext(ExtensionContext);
+  const { bookmarkList } = useContext(ExtensionContext);
 
   function faviconURL(u) {
     const url = new URL(chrome.runtime.getURL("/_favicon/"));
@@ -15,7 +15,7 @@ function UrlBox() {
 
   return (
     <li>
-      {urlNewList.map((url, index) => {
+      {bookmarkList.map((url, index) => {
         return (
           <div
             className="flex h-4 m-3"
