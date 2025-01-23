@@ -1,18 +1,10 @@
 /* global chrome */
 import { useEffect, useState } from "react";
 
-import ExtensionBottomContent from "./components/extensionBottomContent/extensionBottomContent";
-import ExtensionTopContent from "./components/extensionTopContent/extensionTopContent";
-import ExtensionContext from "./context/ExtensionContext";
+import ExtensionContent from "./components/extensionContent";
 
 function App() {
   const [urlNewList, setUrlNewList] = useState([]);
-
-  useEffect(() => {
-    chrome.bookmarks.getTree((treeList) => {
-      getNewTree(treeList);
-    });
-  }, []);
 
   const getNewTree = (nodeItems) => {
     const getNewTreeResult = [];
@@ -33,12 +25,14 @@ function App() {
     const newTree = recursive(nodeItems);
     setUrlNewList(newTree);
   };
-  return (
-    <ExtensionContext.Provider value={[urlNewList, setUrlNewList]}>
-      <ExtensionTopContent />
-      <ExtensionBottomContent />
-    </ExtensionContext.Provider>
-  );
+
+  useEffect(() => {
+    chrome.bookmarks.getTree((treeList) => {
+      getNewTree(treeList);
+    });
+  }, []);
+
+  return <ExtensionContent urlNewList={urlNewList} />;
 }
 
 export default App;
