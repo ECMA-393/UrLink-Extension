@@ -6,6 +6,7 @@
   "action": {
     "default_title": "Click to open panel"
   },
+  "options_page": "options/options.html",
   "icons": {
     "16": "images/icon-16.png"
   },
