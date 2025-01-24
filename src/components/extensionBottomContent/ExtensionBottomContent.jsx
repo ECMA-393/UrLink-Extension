@@ -14,23 +14,22 @@ function UrlBox() {
   }
 
   return (
-    <li>
+    <li className="h-4">
       {bookmarkList.map((url, index) => {
         return (
           <div
-            className="flex h-4 m-3"
+            className="p-3 bg-white hover:bg-gray-200 flex items-center"
             key={index}
           >
-            <img
-              src={faviconURL(url.url)}
-              href={`${url.url}`}
-              className="mr-2"
-            />
             <a
+              className="max-w-[calc(100%-10px)] flex-grow overflow-hidden text-ellipsis whitespace-nowrap"
               href={`${url.url}`}
               target="_blank"
-              className="block max-w-[300px] flex-grow overflow-hidden text-ellipsis whitespace-nowrap"
             >
+              <img
+                className="mr-2 inline-block w-3 h-3"
+                src={faviconURL(url.url)}
+              />
               {url.title}
             </a>
           </div>
@@ -42,7 +41,7 @@ function UrlBox() {
 
 export default function ExtensionBottomContent() {
   return (
-    <ul className="p-3 w-full h-20">
+    <ul className="mt-[7rem] overflow-y-scroll h-[calc(100vh-7rem)]">
       <UrlBox />
     </ul>
   );
