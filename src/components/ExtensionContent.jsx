@@ -27,6 +27,7 @@ function ExtensionContent({ urlNewList }) {
         handleStartSearch,
         searchKeyword,
         setSearchKeyword,
+        isLoading,
       }}
     >
       <ExtensionTopContent />

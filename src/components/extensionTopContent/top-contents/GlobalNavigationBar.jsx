@@ -5,7 +5,7 @@ import { useContext } from "react";
 import ExtensionContext from "../../../context/ExtensionContext";
 
 export default function GlobalNavigationBar() {
-  const { bookmarkList } = useContext(ExtensionContext);
+  const { bookmarkList, isLoading } = useContext(ExtensionContext);
 
   const handleOnClickOpenOptionPage = () => {
     if (chrome.runtime.openOptionsPage) {
@@ -17,7 +17,9 @@ export default function GlobalNavigationBar() {
     <div className="w-full text-white flex mb-3 items-center">
       <p className="grow">
         <span className="text-2xl">{bookmarkList.length}</span>
-        <span className="text-sm">개의 북마크</span>
+        <span className="text-sm">
+          {isLoading ? "개의 북마크에서 검색 중" : "개의 북마크"}
+        </span>
       </p>
       <div className="flex text-white">
         <GnbButton
