@@ -34,8 +34,10 @@ function WebSearchBox() {
   );
 }
 
-function WebSelectBox() {
-  const [currentValue, setCurrentValue] = useState("키워드 검색");
+function WebSelectBox({ selectData }) {
+  const [currentSelectValue, setCurrentSelectValue] = useState(
+    selectData[0].selectType
+  );
   const [isShowOptions, setIsShowOptions] = useState(false);
 
   const handleOnChangeSelectToggle = () => {
@@ -44,50 +46,44 @@ function WebSelectBox() {
 
   const handleOnChangeSelectValue = (e) => {
     const { innerText } = e.target;
-    setCurrentValue(innerText);
+    setCurrentSelectValue(innerText);
   };
 
   return (
     <div
       className={
-        "relative w-[200px] h-10 px-[8px] me-3 rounded-lg bg-black cursor-pointer text-white after:content-['⌵'] after:absolute after:top-1 after:right-3"
+        "relative w-[200px] h-10 px-[8px] me-3 rounded-lg bg-black cursor-pointer text-white after:content-['⌵'] after:absolute after:top-2 after:right-3"
       }
       onClick={() => handleOnChangeSelectToggle()}
     >
-      <label className=" text-sm leading-10">{currentValue}</label>
-      <ul
+      <label className=" text-sm leading-10">{currentSelectValue}</label>
+      <div
         className={
           isShowOptions === false
             ? "absolute overflow-hidden list-none left-0 w-full max-h-[0px]"
             : "absolute overflow-hidden list-none rounded-b-lg top-[35px] left-0 w-full h-[108px] max-h-none bg-black text-white text-sm"
         }
       >
-        <li
-          className="px-[6px] py-[8px] ease-out duration-200"
-          onClick={handleOnChangeSelectValue}
-        >
-          키워드 검색
-        </li>
-        <li
-          className="px-[6px] py-[8px]"
-          onClick={handleOnChangeSelectValue}
-        >
-          제목 검색
-        </li>
-        <li
-          className="px-[6px] py-[8px]"
-          onClick={handleOnChangeSelectValue}
-        >
-          제목 + 키워드 검색
-        </li>
-      </ul>
+        <div>
+          {selectData.map((data, index) => (
+            <button
+              className="block w-full px-[6px] py-[8px] ease-out duration-200 hover:bg-gray-600"
+              key={index}
+              value={data.selectType}
+              onClick={handleOnChangeSelectValue}
+            >
+              {data.selectType}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
-export default function WebKeywordSearchBox() {
+export default function WebKeywordSearchBox({ selectData }) {
   return (
     <div className="flex">
-      <WebSelectBox />
+      <WebSelectBox selectData={selectData} />
       <WebSearchBox />
     </div>
   );
