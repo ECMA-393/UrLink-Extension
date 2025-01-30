@@ -19,7 +19,7 @@ export default function WebGlobalNavigationBar({ urlNewList }) {
 
 function UserSearchBookmarkView() {
   const { isLoading } = useContext(WebSearchContext);
-  console.log(isLoading);
+
   return (
     <>
       {isLoading ? (

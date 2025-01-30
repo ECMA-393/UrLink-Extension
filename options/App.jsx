@@ -30,8 +30,6 @@ function App() {
       getNewTree(treeList);
     });
   }, []);
-  //console.log(urlNewList);
-  //console.log(urlNewList.length);
 
   return <WebContent urlNewList={urlNewList} />;
 }
