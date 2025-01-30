@@ -1,7 +1,21 @@
-function WebUrlNewList({ urlNewList }) {
+import { useContext } from "react";
+
+import { WebSearchContext } from "../../context/WebSearchContext";
+
+export default function WebBottomContent() {
+  return (
+    <div className="w-full h-[calc(100vh-200px)] overflow-hidden max-w-5xl mx-auto my-0">
+      <WebUrlNewList />
+    </div>
+  );
+}
+
+function WebUrlNewList() {
+  const { bookmarkList } = useContext(WebSearchContext);
+
   return (
     <div className="w-full h-[calc(100vh-200px)] overflow-y-auto">
-      {urlNewList.map((url, index) => (
+      {bookmarkList.map((url, index) => (
         <div
           className="w-full flex"
           key={index}
@@ -15,14 +29,6 @@ function WebUrlNewList({ urlNewList }) {
           </a>
         </div>
       ))}
-    </div>
-  );
-}
-
-export default function WebBottomContent({ urlNewList }) {
-  return (
-    <div className="w-full h-[calc(100vh-200px)] overflow-hidden max-w-5xl mx-auto my-0">
-      <WebUrlNewList urlNewList={urlNewList} />
     </div>
   );
 }

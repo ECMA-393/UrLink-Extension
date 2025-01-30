@@ -1,13 +1,60 @@
+import { useState } from "react";
+
+import { WebSearchContext } from "../context/WebSearchContext";
+import useFetchKeywordSearchList from "../hooks/useFetchKeywordSearchData";
 import WebBottomContent from "./webBottomContent/WebBottomContent";
 import WebTopContent from "./webTopContent/WebTopContent";
 
 function WebContent({ urlNewList }) {
-  //console.log(`02 WebContent : ${urlNewList}`);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [bookmarkList, setBookmarkList] = useState([]);
+  const [
+    setKeyword,
+    isLoading,
+    error,
+    searchResultCount,
+    setSearchResultCount,
+  ] = useFetchKeywordSearchList(setBookmarkList, urlNewList);
+
+  const handleStartSearch = () => {
+    if (!isLoading) {
+      setKeyword(searchKeyword);
+    }
+  };
+
+  const handleOnClickReset = () => {
+    if (!isLoading) {
+      setKeyword("");
+      setSearchKeyword("");
+      setSearchResultCount(false);
+    }
+  };
 
   return (
     <div className="w-full h-dvh bg-gray-200">
-      <WebTopContent urlNewList={urlNewList} />
-      <WebBottomContent urlNewList={urlNewList} />
+      <WebSearchContext.Provider
+        value={{
+          bookmarkList,
+          setBookmarkList,
+          searchKeyword,
+          setSearchKeyword,
+          handleStartSearch,
+          handleOnClickReset,
+          searchResultCount,
+          setSearchResultCount,
+          isLoading,
+        }}
+      >
+        <WebTopContent urlNewList={urlNewList} />
+        {isLoading ? (
+          <h1 className="w-full h-[calc(100vh-200px)] overflow-hidden max-w-5xl mx-auto my-0">
+            로딩 중입니다.
+          </h1>
+        ) : (
+          <WebBottomContent urlNewList={urlNewList} />
+        )}
+        {error && <h1>{error}</h1>}
+      </WebSearchContext.Provider>
     </div>
   );
 }
