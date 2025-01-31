@@ -8,13 +8,8 @@ import WebTopContent from "./webTopContent/WebTopContent";
 function WebContent({ urlNewList }) {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [bookmarkList, setBookmarkList] = useState([]);
-  const [
-    setKeyword,
-    isLoading,
-    error,
-    searchResultCount,
-    setSearchResultCount,
-  ] = useFetchKeywordSearchList(setBookmarkList, urlNewList);
+  const [setKeyword, isLoading, error, hasSearchResult, setHasSearchResult] =
+    useFetchKeywordSearchList(setBookmarkList, urlNewList);
 
   const handleStartSearch = () => {
     if (!isLoading) {
@@ -26,7 +21,7 @@ function WebContent({ urlNewList }) {
     if (!isLoading) {
       setKeyword("");
       setSearchKeyword("");
-      setSearchResultCount(false);
+      setHasSearchResult(false);
     }
   };
 
@@ -40,8 +35,8 @@ function WebContent({ urlNewList }) {
           setSearchKeyword,
           handleStartSearch,
           handleOnClickReset,
-          searchResultCount,
-          setSearchResultCount,
+          hasSearchResult,
+          setHasSearchResult,
           isLoading,
         }}
       >

@@ -5,9 +5,7 @@ import { useContext, useState } from "react";
 import { WebSearchContext } from "../../../context/WebSearchContext";
 
 export default function WebKeywordSearchBox({ selectData, urlNewList }) {
-  const [currentSelectValue, setCurrentSelectValue] = useState(
-    selectData[0].selectType
-  );
+  const [currentSelectValue, setCurrentSelectValue] = useState(selectData[0]);
 
   return (
     <div className="flex">
@@ -32,8 +30,8 @@ function WebSelectBox({
     return setIsShowOptions(!isShowOptions);
   };
 
-  const handleOnChangeSelectValue = (e) => {
-    const { innerText } = e.target;
+  const handleOnChangeSelectValue = (event) => {
+    const { innerText } = event.target;
     setCurrentSelectValue(innerText);
   };
 
@@ -48,8 +46,8 @@ function WebSelectBox({
       <div
         className={
           isShowOptions === false
-            ? "absolute overflow-hidden list-none left-0 w-full max-h-[0px]"
-            : "absolute overflow-hidden list-none rounded-b-lg top-[35px] left-0 w-full h-[108px] max-h-none bg-black text-white text-sm"
+            ? "hidden"
+            : "block absolute overflow-hidden list-none rounded-b-lg top-[35px] left-0 w-full h-[108px] max-h-none bg-black text-white text-sm"
         }
       >
         <div>
@@ -57,10 +55,10 @@ function WebSelectBox({
             <button
               className="block w-full px-[6px] py-[8px] ease-out duration-200 hover:bg-gray-600"
               key={index}
-              value={data.selectType}
+              value={data}
               onClick={handleOnChangeSelectValue}
             >
-              {data.selectType}
+              {data}
             </button>
           ))}
         </div>

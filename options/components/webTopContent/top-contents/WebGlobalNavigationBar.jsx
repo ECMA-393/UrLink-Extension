@@ -3,12 +3,12 @@ import { useContext } from "react";
 import { WebSearchContext } from "../../../context/WebSearchContext";
 
 export default function WebGlobalNavigationBar({ urlNewList }) {
-  const { searchResultCount } = useContext(WebSearchContext);
+  const { hasSearchResult } = useContext(WebSearchContext);
 
   return (
     <div className="mb-5 my-4">
       <h1 className="font-bold text-lg">Web View</h1>
-      {searchResultCount ? (
+      {hasSearchResult ? (
         <UserSearchBookmarkView />
       ) : (
         <UserBookmarkListView urlNewList={urlNewList} />

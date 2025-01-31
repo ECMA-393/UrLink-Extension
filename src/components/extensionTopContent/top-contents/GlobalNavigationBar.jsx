@@ -4,25 +4,12 @@ import { useContext } from "react";
 
 import ExtensionContext from "../../../context/ExtensionContext";
 
-function GnbButton({ iconShapeType, onClick }) {
-  return (
-    <button className="w-8 text-lg">
-      <FontAwesomeIcon
-        icon={iconShapeType}
-        onClick={onClick}
-      />
-    </button>
-  );
-}
-
 export default function GlobalNavigationBar() {
   const { bookmarkList } = useContext(ExtensionContext);
 
-  const hendleOnClickOpenOptionPage = () => {
+  const handleOnClickOpenOptionPage = () => {
     if (chrome.runtime.openOptionsPage) {
       chrome.runtime.openOptionsPage();
-    } else {
-      window.open(chrome.runtime.getURL("options.html"));
     }
   };
 
@@ -35,9 +22,20 @@ export default function GlobalNavigationBar() {
       <div className="flex text-white">
         <GnbButton
           iconShapeType={faDesktop}
-          onClick={hendleOnClickOpenOptionPage}
+          onClick={handleOnClickOpenOptionPage}
         />
       </div>
     </div>
+  );
+}
+
+function GnbButton({ iconShapeType, onClick }) {
+  return (
+    <button className="w-8 text-lg">
+      <FontAwesomeIcon
+        icon={iconShapeType}
+        onClick={onClick}
+      />
+    </button>
   );
 }

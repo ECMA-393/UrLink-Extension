@@ -4,7 +4,7 @@ import { SERVER_URL } from "../constants/constants";
 
 const useFetchKeywordSearchList = (setCrawledResult, bookmarkList) => {
   const [keyword, setKeyword] = useState("");
-  const [searchResultCount, setSearchResultCount] = useState(false);
+  const [hasSearchResult, setHasSearchResult] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -14,7 +14,7 @@ const useFetchKeywordSearchList = (setCrawledResult, bookmarkList) => {
         const encodedUrl = encodeURIComponent(bookmark.url);
 
         if (keyword) {
-          setSearchResultCount(true);
+          setHasSearchResult(true);
           return fetch(
             `${SERVER_URL}/crawl/${encodedUrl}/search?keyword=${keyword}`
           );
@@ -70,13 +70,7 @@ const useFetchKeywordSearchList = (setCrawledResult, bookmarkList) => {
     getCrawledData();
   }, [getCrawledData]);
 
-  return [
-    setKeyword,
-    isLoading,
-    error,
-    searchResultCount,
-    setSearchResultCount,
-  ];
+  return [setKeyword, isLoading, error, hasSearchResult, setHasSearchResult];
 };
 
 export default useFetchKeywordSearchList;
