@@ -16,9 +16,9 @@ export default function GlobalNavigationBar() {
   return (
     <div className="w-full text-white flex mb-3 items-center">
       <p className="grow">
-        <span className="text-2xl">{bookmarkList.length}</span>
+        <span className="text-2xl">{!isLoading && bookmarkList.length}</span>
         <span className="text-sm">
-          {isLoading ? "개의 북마크에서 검색 중" : "개의 북마크"}
+          {isLoading ? "북마크 검색 중" : "개의 북마크"}
         </span>
       </p>
       <div className="flex text-white">
