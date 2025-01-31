@@ -23,7 +23,6 @@ function WebContent({ urlNewList }) {
 
   const data = chrome.storage.session.get(["bookmarkList"]);
   data.then((res) => {
-    console.log(res);
     if (Object.keys(res).length !== 0) {
       setBookmarkList(res.bookmarkList.searchResultList);
       setSearchKeyword(res.bookmarkList.keyword);
