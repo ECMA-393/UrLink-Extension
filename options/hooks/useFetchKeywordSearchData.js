@@ -70,7 +70,14 @@ const useFetchKeywordSearchList = (setCrawledResult, bookmarkList) => {
     getCrawledData();
   }, [getCrawledData]);
 
-  return [setKeyword, isLoading, error, hasSearchResult, setHasSearchResult];
+  return [
+    setKeyword,
+    isLoading,
+    error,
+    hasSearchResult,
+    setHasSearchResult,
+    keyword,
+  ];
 };
 
 export default useFetchKeywordSearchList;

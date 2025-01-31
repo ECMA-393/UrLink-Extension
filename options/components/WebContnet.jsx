@@ -8,8 +8,14 @@ import WebTopContent from "./webTopContent/WebTopContent";
 function WebContent({ urlNewList }) {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [bookmarkList, setBookmarkList] = useState([]);
-  const [setKeyword, isLoading, error, hasSearchResult, setHasSearchResult] =
-    useFetchKeywordSearchList(setBookmarkList, urlNewList);
+  const [
+    setKeyword,
+    isLoading,
+    error,
+    hasSearchResult,
+    setHasSearchResult,
+    keyword,
+  ] = useFetchKeywordSearchList(setBookmarkList, urlNewList);
 
   const handleStartSearch = () => {
     if (!isLoading) {
@@ -38,11 +44,12 @@ function WebContent({ urlNewList }) {
           hasSearchResult,
           setHasSearchResult,
           isLoading,
+          keyword,
         }}
       >
         <WebTopContent urlNewList={urlNewList} />
         {isLoading ? (
-          <h1 className="w-full h-[calc(100vh-200px)] overflow-hidden max-w-5xl mx-auto my-0">
+          <h1 className="w-full h-[calc(100vh-200px)] overflow-hidden lg:max-w-5xl lg:px-0 md:max-w-screen-md sm:max-w-screen-sm px-2 mx-auto my-0">
             로딩 중입니다.
           </h1>
         ) : (
