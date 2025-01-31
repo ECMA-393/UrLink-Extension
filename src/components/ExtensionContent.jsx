@@ -14,12 +14,20 @@ function ExtensionContent({ urlNewList }) {
   );
 
   chrome.storage.onChanged.addListener((changes) => {
-    for (const [key, syncedValue] of Object.entries(changes)) {
-      if (key === "webBookmarkList") {
-        setBookmarkList(syncedValue.newValue.searchResultList);
-        setSearchKeyword(syncedValue.newValue.keyword);
+    for (const [key, { newValue }] of Object.entries(changes)) {
+      if (key === "bookmarkList") {
+        setBookmarkList(newValue.searchResultList);
+        setSearchKeyword(newValue.keyword);
         break;
       }
+    }
+  });
+
+  const data = chrome.storage.session.get(["bookmarkList"]);
+  data.then((res) => {
+    if (Object.keys(res).length !== 0) {
+      setBookmarkList(res.bookmarkList.searchResultList);
+      setSearchKeyword(res.bookmarkList.keyword);
     }
   });
 

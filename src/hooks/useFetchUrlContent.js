@@ -55,7 +55,7 @@ const useFetchUrlContent = (setCrawledResult, savedList) => {
         });
 
         chrome.storage.session.set({
-          extensionBookmarkList: { keyword, searchResultList },
+          bookmarkList: { keyword, searchResultList },
         });
         setCrawledResult(searchResultList);
       }

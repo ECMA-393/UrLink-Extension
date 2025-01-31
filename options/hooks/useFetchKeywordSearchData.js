@@ -57,7 +57,7 @@ const useFetchKeywordSearchList = (setCrawledResult, bookmarkList) => {
         });
 
         chrome.storage.session.set({
-          webBookmarkList: { keyword, searchResultList },
+          bookmarkList: { keyword, searchResultList },
         });
         setCrawledResult(searchResultList);
       }
