@@ -11,6 +11,16 @@ function WebContent({ urlNewList }) {
   const [setKeyword, isLoading, error, hasSearchResult, setHasSearchResult] =
     useFetchKeywordSearchList(setBookmarkList, urlNewList);
 
+  chrome.storage.onChanged.addListener((changes) => {
+    for (const [key, syncedValue] of Object.entries(changes)) {
+      if (key === "extensionBookmarkList") {
+        setBookmarkList(syncedValue.newValue.searchResultList);
+        setSearchKeyword(syncedValue.newValue.keyword);
+        break;
+      }
+    }
+  });
+
   const handleStartSearch = () => {
     if (!isLoading) {
       setKeyword(searchKeyword);

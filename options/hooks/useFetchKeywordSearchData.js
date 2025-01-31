@@ -48,15 +48,18 @@ const useFetchKeywordSearchList = (setCrawledResult, bookmarkList) => {
           setError("검색 결과가 없습니다.");
         }
 
-        setCrawledResult(
-          filterdList.map((filterdItem) => {
-            for (let i = 0; i < bookmarkList.length; i++) {
-              if (bookmarkList[i].url === filterdItem.url) {
-                return { ...filterdItem, ...bookmarkList[i] };
-              }
+        const searchResultList = filterdList.map((filterdItem) => {
+          for (let i = 0; i < bookmarkList.length; i++) {
+            if (bookmarkList[i].url === filterdItem.url) {
+              return { ...filterdItem, ...bookmarkList[i] };
             }
-          })
-        );
+          }
+        });
+
+        chrome.storage.session.set({
+          webBookmarkList: { keyword, searchResultList },
+        });
+        setCrawledResult(searchResultList);
       }
 
       setIsLoading(false);
