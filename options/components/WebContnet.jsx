@@ -15,6 +15,7 @@ function WebContent({ urlNewList }) {
     error,
     hasSearchResult,
     setHasSearchResult,
+    keyword,
   ] = useFetchKeywordSearchList(setBookmarkList, setSearchKeyword, urlNewList);
 
   chrome.storage.onChanged.addListener((changes) => {
@@ -67,11 +68,12 @@ function WebContent({ urlNewList }) {
           hasSearchResult,
           setHasSearchResult,
           isLoading,
+          keyword,
         }}
       >
         <WebTopContent urlNewList={urlNewList} />
         {isLoading ? (
-          <h1 className="w-full h-[calc(100vh-200px)] overflow-hidden max-w-5xl mx-auto my-0">
+          <h1 className="w-full h-[calc(100vh-200px)] overflow-hidden lg:max-w-5xl lg:px-0 md:max-w-screen-md sm:max-w-screen-sm px-2 mx-auto my-0">
             로딩 중입니다.
           </h1>
         ) : (

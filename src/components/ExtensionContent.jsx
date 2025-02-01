@@ -8,7 +8,7 @@ import ExtensionTopContent from "./extensionTopContent/extensionTopContent";
 function ExtensionContent({ urlNewList }) {
   const [bookmarkList, setBookmarkList] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [setKeyword, isLoading, error] = useFetchUrlContent(
+  const [keyword, setKeyword, isLoading, error] = useFetchUrlContent(
     setBookmarkList,
     urlNewList
   );
@@ -26,6 +26,7 @@ function ExtensionContent({ urlNewList }) {
         urlNewList,
         setBookmarkList,
         handleStartSearch,
+        keyword,
         searchKeyword,
         setSearchKeyword,
         isLoading,

@@ -91,6 +91,7 @@ const useFetchKeywordSearchList = (
     error,
     hasSearchResult,
     setHasSearchResult,
+    keyword,
   ];
 };
 
