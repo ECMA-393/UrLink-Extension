@@ -47,21 +47,26 @@ function WebUrlNewList() {
 
 function HighlightKeyword({ url }) {
   const { keyword } = useContext(WebSearchContext);
-  console.log(keyword);
 
   return (
     <div className="mt-3 pt-3 border-t font-normal w-full max-w-[calc(100%-0px)] overflow-hidden text-ellipsis whitespace-nowrap">
-      {url.urlText.includes(keyword) ? (
-        <>
-          {url.urlText.split(keyword)[0]}
-          <span className="bg-blue-800 rounded-lg px-1 inline-block text-white mx-px">
-            {keyword}
-          </span>
-          {url.urlText.split(keyword)[1]}
-        </>
-      ) : (
-        ""
-      )}
+      {url.urlText.includes(keyword) &&
+        url.urlText.split(keyword).map((item, index) => {
+          if (index === 0 && !item) {
+            return null;
+          } else if (index === 0 && item) {
+            return <span key={index}>{item}</span>;
+          } else if (index === 1 && item) {
+            return (
+              <span key={index}>
+                <span className="bg-blue-800 rounded-lg px-1 inline-block text-white mx-px">
+                  {keyword}
+                </span>
+                {item}
+              </span>
+            );
+          }
+        })}
     </div>
   );
 }
