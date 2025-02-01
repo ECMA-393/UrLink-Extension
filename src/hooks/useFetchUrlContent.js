@@ -68,7 +68,7 @@ const useFetchUrlContent = (setCrawledResult, savedList) => {
     getCrawledData();
   }, [getCrawledData]);
 
-  return [setKeyword, isLoading, error];
+  return [keyword, setKeyword, isLoading, error];
 };
 
 export default useFetchUrlContent;
