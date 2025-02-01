@@ -38,20 +38,20 @@ const useFetchUrlContent = (setCrawledResult, savedList) => {
           }
         }
 
-        const filterdList = fetchedParseList.filter((filterdItem) => {
-          if (filterdItem.hasKeyword) {
-            return filterdItem;
+        const filteredList = fetchedParseList.filter((filteredItem) => {
+          if (filteredItem.hasKeyword) {
+            return filteredItem;
           }
         });
 
-        if (filterdList.length === 0) {
+        if (filteredList.length === 0) {
           setError("검색 결과가 없습니다.");
         }
 
-        const searchResultList = filterdList.map((filterdItem) => {
+        const searchResultList = filteredList.map((filteredItem) => {
           for (let i = 0; i < savedList.length; i++) {
-            if (savedList[i].url === filterdItem.url) {
-              return { ...filterdItem, ...savedList[i], keyword };
+            if (savedList[i].url === filteredItem.url) {
+              return { ...filteredItem, ...savedList[i] };
             }
           }
         });
