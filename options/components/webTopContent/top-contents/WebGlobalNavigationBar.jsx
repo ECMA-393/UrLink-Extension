@@ -3,12 +3,12 @@ import { useContext } from "react";
 import { WebSearchContext } from "../../../context/WebSearchContext";
 
 export default function WebGlobalNavigationBar({ urlNewList }) {
-  const { hasSearchResult } = useContext(WebSearchContext);
+  const { isLoading } = useContext(WebSearchContext);
 
   return (
     <div className="mb-5 my-4">
       <h1 className="font-bold text-lg">Web View</h1>
-      {hasSearchResult ? (
+      {isLoading ? (
         <UserSearchBookmarkView />
       ) : (
         <UserBookmarkListView urlNewList={urlNewList} />

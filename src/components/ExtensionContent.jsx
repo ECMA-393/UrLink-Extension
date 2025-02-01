@@ -13,24 +13,6 @@ function ExtensionContent({ urlNewList }) {
     urlNewList
   );
 
-  chrome.storage.onChanged.addListener((changes) => {
-    for (const [key, { newValue }] of Object.entries(changes)) {
-      if (key === "bookmarkList") {
-        setBookmarkList(newValue.searchResultList);
-        setSearchKeyword(newValue.keyword);
-        break;
-      }
-    }
-  });
-
-  const data = chrome.storage.session.get(["bookmarkList"]);
-  data.then((res) => {
-    if (Object.keys(res).length !== 0) {
-      setBookmarkList(res.bookmarkList.searchResultList);
-      setSearchKeyword(res.bookmarkList.keyword);
-    }
-  });
-
   const handleStartSearch = () => {
     if (!isLoading) {
       setKeyword(searchKeyword);
@@ -41,6 +23,7 @@ function ExtensionContent({ urlNewList }) {
     <ExtensionContext.Provider
       value={{
         bookmarkList,
+        urlNewList,
         setBookmarkList,
         handleStartSearch,
         searchKeyword,

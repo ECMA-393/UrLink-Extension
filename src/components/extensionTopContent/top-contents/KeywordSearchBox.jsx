@@ -1,12 +1,17 @@
-import { faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faRotate } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext } from "react";
 
 import ExtensionContext from "../../../context/ExtensionContext";
 
 export default function KeywordSearchBox() {
-  const { handleStartSearch, searchKeyword, setSearchKeyword } =
-    useContext(ExtensionContext);
+  const {
+    urlNewList,
+    setBookmarkList,
+    handleStartSearch,
+    searchKeyword,
+    setSearchKeyword,
+  } = useContext(ExtensionContext);
 
   const handleInputText = (event) => {
     if (event.key === "Enter") {
@@ -15,8 +20,9 @@ export default function KeywordSearchBox() {
     setSearchKeyword(event.currentTarget.value);
   };
 
-  const handleXmarkClick = () => {
+  const handleResetClick = () => {
     setSearchKeyword("");
+    setBookmarkList(urlNewList);
   };
 
   return (
@@ -34,13 +40,13 @@ export default function KeywordSearchBox() {
         placeholder="키워드를 입력해 주세요."
       />
       <button
-        className="w-4 text-2xl"
-        onClick={handleXmarkClick}
+        className="w-4 text-base"
+        onClick={handleResetClick}
       >
-        <FontAwesomeIcon icon={faXmark} />
+        <FontAwesomeIcon icon={faRotate} />
       </button>
       <button
-        className="w-12 text-lg"
+        className="w-12 text-base"
         onClick={handleStartSearch}
       >
         <FontAwesomeIcon icon={faMagnifyingGlass} />

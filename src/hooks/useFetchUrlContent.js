@@ -23,6 +23,8 @@ const useFetchUrlContent = (setCrawledResult, savedList) => {
       });
 
       if (keyword) {
+        chrome.storage.session.remove("webBookmarkList");
+
         const fetchedResultList = await Promise.allSettled(fetchEncodedUrlList);
         const fetchedParseList = [];
 
@@ -55,11 +57,12 @@ const useFetchUrlContent = (setCrawledResult, savedList) => {
         });
 
         chrome.storage.session.set({
-          bookmarkList: { keyword, searchResultList },
+          webBookmarkList: { keyword, searchResultList },
         });
         setCrawledResult(searchResultList);
       }
 
+      chrome.storage.session.set({ webIsLoading: false });
       setIsLoading(false);
     } catch (error) {
       setError(error);
@@ -67,6 +70,8 @@ const useFetchUrlContent = (setCrawledResult, savedList) => {
   }, [keyword, savedList, setCrawledResult]);
 
   useEffect(() => {
+    chrome.storage.session.set({ webIsLoading: true });
+
     setIsLoading(true);
     getCrawledData();
   }, [getCrawledData]);

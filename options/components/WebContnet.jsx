@@ -8,24 +8,35 @@ import WebTopContent from "./webTopContent/WebTopContent";
 function WebContent({ urlNewList }) {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [bookmarkList, setBookmarkList] = useState([]);
-  const [setKeyword, isLoading, error, hasSearchResult, setHasSearchResult] =
-    useFetchKeywordSearchList(setBookmarkList, urlNewList);
+  const [
+    setKeyword,
+    isLoading,
+    setIsLoading,
+    error,
+    hasSearchResult,
+    setHasSearchResult,
+  ] = useFetchKeywordSearchList(setBookmarkList, setSearchKeyword, urlNewList);
 
   chrome.storage.onChanged.addListener((changes) => {
     for (const [key, { newValue }] of Object.entries(changes)) {
-      if (key === "bookmarkList") {
+      if (key === "webBookmarkList") {
         setBookmarkList(newValue.searchResultList);
         setSearchKeyword(newValue.keyword);
+        break;
+      }
+
+      if (key === "webIsLoading") {
+        setIsLoading(newValue);
         break;
       }
     }
   });
 
-  const data = chrome.storage.session.get(["bookmarkList"]);
-  data.then((res) => {
-    if (Object.keys(res).length !== 0) {
-      setBookmarkList(res.bookmarkList.searchResultList);
-      setSearchKeyword(res.bookmarkList.keyword);
+  const webSearchedList = chrome.storage.session.get(["webBookmarkList"]);
+  webSearchedList.then((list) => {
+    if (Object.keys(list).length !== 0) {
+      setBookmarkList(list.webBookmarkList.searchResultList);
+      setSearchKeyword(list.bookwebBookmarkListmarkList.keyword);
     }
   });
 
