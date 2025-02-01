@@ -34,7 +34,7 @@ function UrlBox() {
               </a>
             </div>
             {url.urlText && <hr className="ml-3 w-[95%]" />}
-            <HighlightKeyword url={url} />
+            {url.urlText && <HighlightKeyword url={url} />}
           </>
         );
       })}
@@ -56,27 +56,25 @@ function HighlightKeyword({ url }) {
   return (
     <div
       className={
-        url.urlText &&
         "ml-3 mt-1 mb-2 font-normal w-full max-w-[calc(100%-0px)] overflow-hidden text-ellipsis whitespace-nowrap"
       }
     >
-      {url.urlText &&
-        url.urlText.split(keyword).map((item, index) => {
-          if (index === 0 && !item) {
-            return null;
-          } else if (index === 0 && item) {
-            return <span key={index}>{item}</span>;
-          } else {
-            return (
-              <span key={index}>
-                <span className="bg-blue-800 rounded-lg px-1 inline-block text-white mx-px">
-                  {keyword}
-                </span>
-                {item}
+      {url.urlText.split(keyword).map((item, index) => {
+        if (index === 0 && !item) {
+          return null;
+        } else if (index === 0 && item) {
+          return <span key={index}>{item}</span>;
+        } else {
+          return (
+            <span key={index}>
+              <span className="bg-blue-800 rounded-lg px-1 inline-block text-white mx-px">
+                {keyword}
               </span>
-            );
-          }
-        })}
+              {item}
+            </span>
+          );
+        }
+      })}
     </div>
   );
 }
