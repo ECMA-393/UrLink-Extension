@@ -11,8 +11,13 @@ export default function WebBottomContent() {
 }
 
 function WebUrlNewList() {
-  const { bookmarkList, hasSearchResult, keyword, userSelectSearchValue } =
-    useContext(WebSearchContext);
+  const {
+    bookmarkList,
+    hasSearchResult,
+    keyword,
+    userSelectSearchValue,
+    SELECT_VALUE_STATE,
+  } = useContext(WebSearchContext);
 
   function faviconURL(u) {
     const url = new URL(chrome.runtime.getURL("/_favicon/"));
@@ -39,15 +44,15 @@ function WebUrlNewList() {
             />
             {hasSearchResult &&
             keyword &&
-            userSelectSearchValue === "키워드 검색" ? (
+            userSelectSearchValue === SELECT_VALUE_STATE[0] ? (
               <HighlightKeyword url={url} />
             ) : hasSearchResult &&
               keyword &&
-              userSelectSearchValue === "제목 검색" ? (
+              userSelectSearchValue === SELECT_VALUE_STATE[1] ? (
               <HighlightTitleKeyword url={url} />
             ) : hasSearchResult &&
               keyword &&
-              userSelectSearchValue === "제목 + 키워드 검색" ? (
+              userSelectSearchValue === SELECT_VALUE_STATE[2] ? (
               <HighlightKeyword url={url} />
             ) : (
               url.title
@@ -60,11 +65,12 @@ function WebUrlNewList() {
 }
 
 function HighlightKeyword({ url }) {
-  const { keyword, userSelectSearchValue } = useContext(WebSearchContext);
+  const { keyword, userSelectSearchValue, SELECT_VALUE_STATE } =
+    useContext(WebSearchContext);
 
   return (
     <>
-      {userSelectSearchValue === "제목 + 키워드 검색" ? (
+      {userSelectSearchValue === SELECT_VALUE_STATE[2] ? (
         <HighlightTitleKeyword url={url} />
       ) : (
         url.title
@@ -75,7 +81,7 @@ function HighlightKeyword({ url }) {
             return null;
           } else if (index === 0 && item) {
             return <span key={index}>{item}</span>;
-          } else if (index === 1 && item) {
+          } else {
             return (
               <span key={index}>
                 <span className="bg-blue-800 rounded-lg px-1 inline-block text-white mx-px">
@@ -101,7 +107,7 @@ function HighlightTitleKeyword({ url }) {
           return null;
         } else if (index === 0 && item) {
           return <span key={index}>{item}</span>;
-        } else if (index === 1 && item) {
+        } else {
           return (
             <span key={index}>
               <span className="text-blue-600 font-bold px-1 inline-block mx-px">

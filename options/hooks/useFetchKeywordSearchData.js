@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { SERVER_URL } from "../constants/constants";
+import { SELECT_VALUE_STATE } from "../constants/selectValueState";
 
 const useFetchKeywordSearchList = (
   setCrawledResult,
@@ -18,21 +19,20 @@ const useFetchKeywordSearchList = (
       const fetchEncodedUrlList = bookmarkList.map((bookmark) => {
         const encodedUrl = encodeURIComponent(bookmark.url);
 
-        if (keyword && userSelectValue === "키워드 검색") {
+        if (keyword) {
+          let url = "";
+          if (userSelectValue === SELECT_VALUE_STATE[0]) {
+            url = `${SERVER_URL}/crawl/${encodedUrl}/search?keyword=${keyword}`;
+          }
+          if (userSelectValue === SELECT_VALUE_STATE[1]) {
+            url = `${SERVER_URL}/crawl/title/${encodedUrl}/search?keyword=${keyword}`;
+          }
+          if (userSelectValue === SELECT_VALUE_STATE[2]) {
+            url = `${SERVER_URL}/crawl/all/${encodedUrl}/search?keyword=${keyword}`;
+          }
+
           setHasSearchResult(true);
-          return fetch(
-            `${SERVER_URL}/crawl/${encodedUrl}/search?keyword=${keyword}`
-          );
-        } else if (keyword && userSelectValue === "제목 검색") {
-          setHasSearchResult(true);
-          return fetch(
-            `${SERVER_URL}/crawl/title/${encodedUrl}/search?keyword=${keyword}`
-          );
-        } else if (keyword && userSelectValue === "제목 + 키워드 검색") {
-          setHasSearchResult(true);
-          return fetch(
-            `${SERVER_URL}/crawl/all/${encodedUrl}/search?keyword=${keyword}`
-          );
+          return fetch(url);
         } else {
           setIsLoading(false);
           const storageBookMarkList = chrome.storage.session.get([
