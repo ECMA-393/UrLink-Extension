@@ -4,15 +4,19 @@ import { useContext, useState } from "react";
 
 import { WebSearchContext } from "../../../context/WebSearchContext";
 
-export default function WebKeywordSearchBox({ selectData, urlNewList }) {
-  const [currentSelectValue, setCurrentSelectValue] = useState(selectData[0]);
+export default function WebKeywordSearchBox({ urlNewList }) {
+  const {
+    userSelectSearchValue,
+    setUserSelectSearchValue,
+    SELECT_VALUE_STATE,
+  } = useContext(WebSearchContext);
 
   return (
     <div className="flex">
       <WebSelectBox
-        selectData={selectData}
-        setCurrentSelectValue={setCurrentSelectValue}
-        currentSelectValue={currentSelectValue}
+        selectData={SELECT_VALUE_STATE}
+        setUserSelectSearchValue={setUserSelectSearchValue}
+        userSelectSearchValue={userSelectSearchValue}
       />
       <WebSearchBox urlNewList={urlNewList} />
     </div>
@@ -21,8 +25,8 @@ export default function WebKeywordSearchBox({ selectData, urlNewList }) {
 
 function WebSelectBox({
   selectData,
-  setCurrentSelectValue,
-  currentSelectValue,
+  setUserSelectSearchValue,
+  userSelectSearchValue,
 }) {
   const [isShowOptions, setIsShowOptions] = useState(false);
 
@@ -32,7 +36,7 @@ function WebSelectBox({
 
   const handleOnChangeSelectValue = (event) => {
     const { innerText } = event.target;
-    setCurrentSelectValue(innerText);
+    setUserSelectSearchValue(innerText);
   };
 
   return (
@@ -42,7 +46,7 @@ function WebSelectBox({
       }
       onClick={() => handleOnChangeSelectToggle()}
     >
-      <label className=" text-sm leading-10">{currentSelectValue}</label>
+      <label className=" text-sm leading-10">{userSelectSearchValue}</label>
       <div
         className={
           isShowOptions === false

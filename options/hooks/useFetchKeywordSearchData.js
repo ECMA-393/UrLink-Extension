@@ -5,7 +5,8 @@ import { SERVER_URL } from "../constants/constants";
 const useFetchKeywordSearchList = (
   setCrawledResult,
   setSearchKeyword,
-  bookmarkList
+  bookmarkList,
+  userSelectValue
 ) => {
   const [keyword, setKeyword] = useState("");
   const [hasSearchResult, setHasSearchResult] = useState(false);
@@ -17,10 +18,20 @@ const useFetchKeywordSearchList = (
       const fetchEncodedUrlList = bookmarkList.map((bookmark) => {
         const encodedUrl = encodeURIComponent(bookmark.url);
 
-        if (keyword) {
+        if (keyword && userSelectValue === "키워드 검색") {
           setHasSearchResult(true);
           return fetch(
             `${SERVER_URL}/crawl/${encodedUrl}/search?keyword=${keyword}`
+          );
+        } else if (keyword && userSelectValue === "제목 검색") {
+          setHasSearchResult(true);
+          return fetch(
+            `${SERVER_URL}/crawl/title/${encodedUrl}/search?keyword=${keyword}`
+          );
+        } else if (keyword && userSelectValue === "제목 + 키워드 검색") {
+          setHasSearchResult(true);
+          return fetch(
+            `${SERVER_URL}/crawl/all/${encodedUrl}/search?keyword=${keyword}`
           );
         } else {
           setIsLoading(false);
@@ -77,7 +88,13 @@ const useFetchKeywordSearchList = (
     } catch (error) {
       setError(error);
     }
-  }, [keyword, bookmarkList, setCrawledResult, setSearchKeyword]);
+  }, [
+    keyword,
+    bookmarkList,
+    setCrawledResult,
+    setSearchKeyword,
+    userSelectValue,
+  ]);
 
   useEffect(() => {
     setIsLoading(true);

@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { SELECT_VALUE_STATE } from "../constants/selectValueState";
 import { WebSearchContext } from "../context/WebSearchContext";
 import useFetchKeywordSearchList from "../hooks/useFetchKeywordSearchData";
 import WebBottomContent from "./webBottomContent/WebBottomContent";
@@ -7,6 +8,9 @@ import WebTopContent from "./webTopContent/WebTopContent";
 
 function WebContent({ urlNewList }) {
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [userSelectSearchValue, setUserSelectSearchValue] = useState(
+    SELECT_VALUE_STATE[0]
+  );
   const [bookmarkList, setBookmarkList] = useState([]);
   const [
     setKeyword,
@@ -16,7 +20,12 @@ function WebContent({ urlNewList }) {
     hasSearchResult,
     setHasSearchResult,
     keyword,
-  ] = useFetchKeywordSearchList(setBookmarkList, setSearchKeyword, urlNewList);
+  ] = useFetchKeywordSearchList(
+    setBookmarkList,
+    setSearchKeyword,
+    urlNewList,
+    userSelectSearchValue
+  );
 
   chrome.storage.onChanged.addListener((changes) => {
     for (const [key, { newValue }] of Object.entries(changes)) {
@@ -59,12 +68,15 @@ function WebContent({ urlNewList }) {
     <div className="w-full h-dvh bg-gray-200">
       <WebSearchContext.Provider
         value={{
+          SELECT_VALUE_STATE,
           bookmarkList,
           setBookmarkList,
           searchKeyword,
           setSearchKeyword,
           handleStartSearch,
           handleOnClickReset,
+          setUserSelectSearchValue,
+          userSelectSearchValue,
           hasSearchResult,
           setHasSearchResult,
           isLoading,

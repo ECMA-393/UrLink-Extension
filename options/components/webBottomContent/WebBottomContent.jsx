@@ -11,7 +11,8 @@ export default function WebBottomContent() {
 }
 
 function WebUrlNewList() {
-  const { bookmarkList, hasSearchResult } = useContext(WebSearchContext);
+  const { bookmarkList, hasSearchResult, keyword, userSelectSearchValue } =
+    useContext(WebSearchContext);
 
   function faviconURL(u) {
     const url = new URL(chrome.runtime.getURL("/_favicon/"));
@@ -36,8 +37,21 @@ function WebUrlNewList() {
               className="mr-2 inline-block w-3 h-3"
               src={faviconURL(url.url)}
             />
-            {url.title}
-            {hasSearchResult ? <HighlightKeyword url={url} /> : ""}
+            {hasSearchResult &&
+            keyword &&
+            userSelectSearchValue === "키워드 검색" ? (
+              <HighlightKeyword url={url} />
+            ) : hasSearchResult &&
+              keyword &&
+              userSelectSearchValue === "제목 검색" ? (
+              <HighlightTitleKeyword url={url} />
+            ) : hasSearchResult &&
+              keyword &&
+              userSelectSearchValue === "제목 + 키워드 검색" ? (
+              <HighlightKeyword url={url} />
+            ) : (
+              url.title
+            )}
           </a>
         </div>
       ))}
@@ -46,12 +60,17 @@ function WebUrlNewList() {
 }
 
 function HighlightKeyword({ url }) {
-  const { keyword } = useContext(WebSearchContext);
+  const { keyword, userSelectSearchValue } = useContext(WebSearchContext);
 
   return (
-    <div className="mt-3 pt-3 border-t font-normal w-full max-w-[calc(100%-0px)] overflow-hidden text-ellipsis whitespace-nowrap">
-      {url.urlText.includes(keyword) &&
-        url.urlText.split(keyword).map((item, index) => {
+    <>
+      {userSelectSearchValue === "제목 + 키워드 검색" ? (
+        <HighlightTitleKeyword url={url} />
+      ) : (
+        url.title
+      )}
+      <div className="mt-3 pt-3 border-t font-normal w-full max-w-[calc(100%-0px)] overflow-hidden text-ellipsis whitespace-nowrap">
+        {url.urlText.split(keyword).map((item, index) => {
           if (index === 0 && !item) {
             return null;
           } else if (index === 0 && item) {
@@ -67,6 +86,32 @@ function HighlightKeyword({ url }) {
             );
           }
         })}
-    </div>
+      </div>
+    </>
+  );
+}
+
+function HighlightTitleKeyword({ url }) {
+  const { keyword } = useContext(WebSearchContext);
+
+  return (
+    <>
+      {url.title.split(keyword).map((item, index) => {
+        if (index === 0 && !item) {
+          return null;
+        } else if (index === 0 && item) {
+          return <span key={index}>{item}</span>;
+        } else if (index === 1 && item) {
+          return (
+            <span key={index}>
+              <span className="text-blue-600 font-bold px-1 inline-block mx-px">
+                {keyword}
+              </span>
+              {item}
+            </span>
+          );
+        }
+      })}
+    </>
   );
 }
