@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { SELECT_VALUE_STATE } from "../constants/selectValueState";
 import { WebSearchContext } from "../context/WebSearchContext";
@@ -27,28 +27,30 @@ function WebContent({ urlNewList }) {
     userSelectSearchValue
   );
 
-  chrome.storage.onChanged.addListener((changes) => {
-    for (const [key, { newValue }] of Object.entries(changes)) {
-      if (key === "webBookmarkList") {
-        setBookmarkList(newValue.searchResultList);
-        setSearchKeyword(newValue.keyword);
-        break;
-      }
+  useEffect(() => {
+    chrome.storage.onChanged.addListener((changes) => {
+      for (const [key, { newValue }] of Object.entries(changes)) {
+        if (key === "webBookmarkList") {
+          setBookmarkList(newValue.searchResultList);
+          setSearchKeyword(newValue.keyword);
+          break;
+        }
 
-      if (key === "webIsLoading") {
-        setIsLoading(newValue);
-        break;
+        if (key === "webIsLoading") {
+          setIsLoading(newValue);
+          break;
+        }
       }
-    }
-  });
+    });
 
-  const webSearchedList = chrome.storage.session.get(["webBookmarkList"]);
-  webSearchedList.then((list) => {
-    if (Object.keys(list).length !== 0) {
-      setBookmarkList(list.webBookmarkList.searchResultList);
-      setSearchKeyword(list.bookwebBookmarkListmarkList.keyword);
-    }
-  });
+    const webSearchedList = chrome.storage.session.get(["webBookmarkList"]);
+    webSearchedList.then((list) => {
+      if (Object.keys(list).length !== 0) {
+        setBookmarkList(list.webBookmarkList.searchResultList);
+        setSearchKeyword(list.webBookmarkList.keyword);
+      }
+    });
+  }, [setIsLoading]);
 
   const handleStartSearch = () => {
     if (!isLoading) {
