@@ -4,11 +4,15 @@ import { useContext, useState } from "react";
 
 import ExtensionContext from "../../../context/ExtensionContext";
 
-export default function KeywordSearchBox() {
+export default function KeywordSearchBox({ isLoading }) {
   const { setSearchKeyword } = useContext(ExtensionContext);
   const [inputKeyword, setInputKeyword] = useState("");
 
   const handleInputKeyword = (event) => {
+    if (isLoading) {
+      return;
+    }
+
     setInputKeyword(event.currentTarget.value);
   };
 
@@ -38,13 +42,13 @@ export default function KeywordSearchBox() {
         placeholder="키워드를 입력해 주세요."
       />
       <button
-        className="w-4 text-base"
+        className={`${isLoading && "hidden"} w-4 text-base`}
         onClick={handleClickReset}
       >
         <FontAwesomeIcon icon={faRotate} />
       </button>
       <button
-        className="w-12 text-base"
+        className={`${isLoading && "hidden"} w-12 text-base`}
         onClick={handleClickSearch}
       >
         <FontAwesomeIcon icon={faMagnifyingGlass} />

@@ -5,7 +5,7 @@ import { useContext } from "react";
 import ExtensionContext from "../../../context/ExtensionContext";
 
 export default function GlobalNavigationBar({ isLoading }) {
-  const { searchBookmarkList } = useContext(ExtensionContext);
+  const { allBookmarkList, searchBookmarkList } = useContext(ExtensionContext);
 
   const handleOnClickOpenOptionPage = () => {
     if (chrome.runtime.openOptionsPage) {
@@ -20,10 +20,15 @@ export default function GlobalNavigationBar({ isLoading }) {
     <div className="w-full text-white flex mb-3 items-center">
       <p className="grow">
         {isLoading && (
-          <FontAwesomeIcon
-            icon={faSpinner}
-            className="animate-spin"
-          />
+          <>
+            <FontAwesomeIcon
+              icon={faSpinner}
+              className="animate-spin"
+            />
+            <span className="mx-2">
+              {allBookmarkList.length}개 북마크 탐색 중
+            </span>
+          </>
         )}
         {!isLoading && (
           <>
