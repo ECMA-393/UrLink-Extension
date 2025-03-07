@@ -60,20 +60,20 @@ function HighlightKeyword({ bookmark }) {
       }
     >
       {bookmark.urlText.split(searchKeyword).map((item, index) => {
-        if (index === 0 && !item) {
-          return null;
-        } else if (index === 0 && item) {
-          return <span key={index}>{item}</span>;
-        } else {
-          return (
-            <span key={index}>
+        if (item === "") {
+          return;
+        }
+
+        return (
+          <span key={index}>
+            {index > 0 && (
               <span className="bg-blue-800 rounded-lg px-1 inline-block text-white mx-px">
                 {searchKeyword}
               </span>
-              {item}
-            </span>
-          );
-        }
+            )}
+            {item}
+          </span>
+        );
       })}
     </div>
   );

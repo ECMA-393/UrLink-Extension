@@ -7,10 +7,7 @@ export default function ExtensionTopContent() {
 
   return (
     <div className="fixed p-3 bg-black w-full h-28 block top-0">
-      <GlobalNavigationBar
-        isLoading={isLoading}
-        isError={isError}
-      />
+      <GlobalNavigationBar isLoading={isLoading} />
       <KeywordSearchBox
         isLoading={isLoading}
         isError={isError}
