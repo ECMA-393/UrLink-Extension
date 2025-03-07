@@ -14,7 +14,7 @@ function UrlBox() {
 
   return (
     <li className="h-4">
-      {searchBookmarkList.map((url, index) => {
+      {searchBookmarkList.map((bookmark, index) => {
         return (
           <>
             <div
@@ -23,18 +23,18 @@ function UrlBox() {
             >
               <a
                 className="max-w-[calc(100%-10px)] flex-grow overflow-hidden text-ellipsis whitespace-nowrap"
-                href={`${url.url}`}
+                href={`${bookmark.url}`}
                 target="_blank"
               >
                 <img
                   className="mr-2 inline-block w-3 h-3"
-                  src={faviconURL(url.url)}
+                  src={faviconURL(bookmark.url)}
                 />
-                {url.title}
+                {bookmark.title}
               </a>
             </div>
-            {url.urlText && <hr className="ml-3 w-[95%]" />}
-            {url.urlText && <HighlightKeyword url={url} />}
+            {bookmark.urlText && <hr className="ml-3 w-[95%]" />}
+            {bookmark.urlText && <HighlightKeyword bookmark={bookmark} />}
           </>
         );
       })}
@@ -50,8 +50,8 @@ export default function ExtensionBottomContent() {
   );
 }
 
-function HighlightKeyword({ url }) {
-  const { keyword } = useContext(ExtensionContext);
+function HighlightKeyword({ bookmark }) {
+  const { searchKeyword } = useContext(ExtensionContext);
 
   return (
     <div
@@ -59,7 +59,7 @@ function HighlightKeyword({ url }) {
         "ml-3 mt-1 mb-2 font-normal w-full max-w-[calc(100%-0px)] overflow-hidden text-ellipsis whitespace-nowrap"
       }
     >
-      {url.urlText.split(keyword).map((item, index) => {
+      {bookmark.urlText.split(searchKeyword).map((item, index) => {
         if (index === 0 && !item) {
           return null;
         } else if (index === 0 && item) {
@@ -68,7 +68,7 @@ function HighlightKeyword({ url }) {
           return (
             <span key={index}>
               <span className="bg-blue-800 rounded-lg px-1 inline-block text-white mx-px">
-                {keyword}
+                {searchKeyword}
               </span>
               {item}
             </span>

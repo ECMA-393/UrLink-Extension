@@ -47,20 +47,32 @@ const useFetchUrlContent = () => {
       });
 
       if (fetchEncodedUrlList) {
-        const fetchedResultList = await Promise.allSettled(fetchEncodedUrlList);
-        const fetchedParseList = [];
+        const searchResultList = await Promise.allSettled(fetchEncodedUrlList);
+        const searchedBookmarkList = [];
 
-        for (const fetchedResult of fetchedResultList) {
-          if (fetchedResult.status === "fulfilled") {
-            const fetchedResultValue = fetchedResult.value;
+        for (const resultList of searchResultList) {
+          if (resultList.status === "fulfilled") {
+            const searchItem = resultList.value;
 
-            if (fetchedResultValue.ok) {
-              fetchedParseList.push(await fetchedResultValue.json());
+            if (searchItem.ok) {
+              searchedBookmarkList.push(await searchItem.json());
             }
           }
         }
 
-        setSearchBookmarkList((state) => [...state, ...fetchedParseList]);
+        const filterBookmarkList = searchedBookmarkList.filter(
+          (bookmarkItem) => bookmarkItem.hasKeyword
+        );
+
+        const resultBookmarkList = filterBookmarkList.map((bookmarkItem) => {
+          for (let i = 0; i < allBookmarkList.length; i++) {
+            if (allBookmarkList[i].url === bookmarkItem.url) {
+              return { ...bookmarkItem, ...allBookmarkList[i] };
+            }
+          }
+        });
+
+        setSearchBookmarkList(resultBookmarkList);
       }
     } catch (error) {
       setError(error);

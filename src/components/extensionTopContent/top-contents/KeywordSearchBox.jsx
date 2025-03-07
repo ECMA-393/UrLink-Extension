@@ -23,6 +23,7 @@ export default function KeywordSearchBox() {
   };
 
   const handleClickReset = () => {
+    setInputKeyword("");
     setSearchKeyword("");
   };
 
