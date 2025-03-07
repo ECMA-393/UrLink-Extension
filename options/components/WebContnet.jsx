@@ -1,99 +1,26 @@
 import { useEffect, useState } from "react";
 
-import { SELECT_VALUE_STATE } from "../constants/selectValueState";
 import { WebSearchContext } from "../context/WebSearchContext";
-import useFetchKeywordSearchList from "../hooks/useFetchKeywordSearchData";
 import WebBottomContent from "./webBottomContent/WebBottomContent";
 import WebTopContent from "./webTopContent/WebTopContent";
 
-function WebContent({ urlNewList }) {
+function WebContent() {
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [userSelectSearchValue, setUserSelectSearchValue] = useState(
-    SELECT_VALUE_STATE[0]
-  );
-  const [bookmarkList, setBookmarkList] = useState([]);
-  const [
-    setKeyword,
-    isLoading,
-    setIsLoading,
-    error,
-    hasSearchResult,
-    setHasSearchResult,
-    keyword,
-  ] = useFetchKeywordSearchList(
-    setBookmarkList,
-    setSearchKeyword,
-    urlNewList,
-    userSelectSearchValue
-  );
+  const [urlNewList, setUrlNewList] = useState([]);
 
-  useEffect(() => {
-    chrome.storage.onChanged.addListener((changes) => {
-      for (const [key, { newValue }] of Object.entries(changes)) {
-        if (key === "webBookmarkList") {
-          setBookmarkList(newValue.searchResultList);
-          setSearchKeyword(newValue.keyword);
-          break;
-        }
-
-        if (key === "webIsLoading") {
-          setIsLoading(newValue);
-          break;
-        }
-      }
-    });
-
-    const webSearchedList = chrome.storage.session.get(["webBookmarkList"]);
-    webSearchedList.then((list) => {
-      if (Object.keys(list).length !== 0) {
-        setBookmarkList(list.webBookmarkList.searchResultList);
-        setSearchKeyword(list.webBookmarkList.keyword);
-      }
-    });
-  }, [setIsLoading]);
-
-  const handleStartSearch = () => {
-    if (!isLoading) {
-      setKeyword(searchKeyword);
-    }
-  };
-
-  const handleOnClickReset = () => {
-    if (!isLoading) {
-      setKeyword("");
-      setSearchKeyword("");
-      setHasSearchResult(false);
-    }
-  };
+  useEffect(() => {}, []);
 
   return (
     <div className="w-full h-dvh bg-gray-200">
       <WebSearchContext.Provider
         value={{
-          SELECT_VALUE_STATE,
-          bookmarkList,
-          setBookmarkList,
+          setUrlNewList,
           searchKeyword,
           setSearchKeyword,
-          handleStartSearch,
-          handleOnClickReset,
-          setUserSelectSearchValue,
-          userSelectSearchValue,
-          hasSearchResult,
-          setHasSearchResult,
-          isLoading,
-          keyword,
         }}
       >
         <WebTopContent urlNewList={urlNewList} />
-        {isLoading ? (
-          <h1 className="w-full h-[calc(100vh-200px)] overflow-hidden lg:max-w-5xl lg:px-0 md:max-w-screen-md sm:max-w-screen-sm px-2 mx-auto my-0">
-            로딩 중입니다.
-          </h1>
-        ) : (
-          <WebBottomContent urlNewList={urlNewList} />
-        )}
-        {error && <h1>{error}</h1>}
+        <WebBottomContent urlNewList={urlNewList} />
       </WebSearchContext.Provider>
     </div>
   );
