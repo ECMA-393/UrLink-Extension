@@ -11,13 +11,7 @@ export default function WebBottomContent() {
 }
 
 function WebUrlNewList() {
-  const {
-    bookmarkList,
-    hasSearchResult,
-    keyword,
-    userSelectSearchValue,
-    SELECT_VALUE_STATE,
-  } = useContext(WebSearchContext);
+  const { bookmarkList } = useContext(WebSearchContext);
 
   function faviconURL(u) {
     const url = new URL(chrome.runtime.getURL("/_favicon/"));
@@ -42,58 +36,11 @@ function WebUrlNewList() {
               className="mr-2 inline-block w-3 h-3"
               src={faviconURL(url.url)}
             />
-            {hasSearchResult &&
-            keyword &&
-            userSelectSearchValue === SELECT_VALUE_STATE[0] ? (
-              <HighlightKeyword url={url} />
-            ) : hasSearchResult &&
-              keyword &&
-              userSelectSearchValue === SELECT_VALUE_STATE[1] ? (
-              <HighlightTitleKeyword url={url} />
-            ) : hasSearchResult &&
-              keyword &&
-              userSelectSearchValue === SELECT_VALUE_STATE[2] ? (
-              <HighlightKeyword url={url} />
-            ) : (
-              url.title
-            )}
+            <HighlightTitleKeyword url={url} />
           </a>
         </div>
       ))}
     </div>
-  );
-}
-
-function HighlightKeyword({ url }) {
-  const { keyword, userSelectSearchValue, SELECT_VALUE_STATE } =
-    useContext(WebSearchContext);
-
-  return (
-    <>
-      {userSelectSearchValue === SELECT_VALUE_STATE[2] ? (
-        <HighlightTitleKeyword url={url} />
-      ) : (
-        url.title
-      )}
-      <div className="mt-3 pt-3 border-t font-normal w-full max-w-[calc(100%-0px)] overflow-hidden text-ellipsis whitespace-nowrap">
-        {url.urlText.split(keyword).map((item, index) => {
-          if (index === 0 && !item) {
-            return null;
-          } else if (index === 0 && item) {
-            return <span key={index}>{item}</span>;
-          } else {
-            return (
-              <span key={index}>
-                <span className="bg-blue-800 rounded-lg px-1 inline-block text-white mx-px">
-                  {keyword}
-                </span>
-                {item}
-              </span>
-            );
-          }
-        })}
-      </div>
-    </>
   );
 }
 
