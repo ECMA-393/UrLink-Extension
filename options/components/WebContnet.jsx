@@ -12,7 +12,7 @@ function WebContent() {
   useEffect(() => {}, []);
 
   return (
-    <div className="w-full h-dvh bg-gray-200">
+    <div className="w-full h-dvh bg-gray-200 flex">
       <WebSearchContext.Provider
         value={{
           setUrlNewList,
@@ -21,7 +21,7 @@ function WebContent() {
         }}
       >
         <WebSideSearchHistory />
-        <div>
+        <div className="w-[calc(100%-300px)] px-3 pe-5">
           <WebTopContent urlNewList={urlNewList} />
           <WebBottomContent urlNewList={urlNewList} />
         </div>
