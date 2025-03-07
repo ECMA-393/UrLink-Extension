@@ -3,18 +3,18 @@ import { useContext } from "react";
 import ExtensionContext from "../../context/ExtensionContext";
 
 function UrlBox() {
-  const { bookmarkList } = useContext(ExtensionContext);
+  const { searchBookmarkList } = useContext(ExtensionContext);
 
-  function faviconURL(u) {
+  function faviconURL(urlOfFavicon) {
     const url = new URL(chrome.runtime.getURL("/_favicon/"));
-    url.searchParams.set("pageUrl", u);
+    url.searchParams.set("pageUrl", urlOfFavicon);
     url.searchParams.set("size", "32");
     return url.toString();
   }
 
   return (
     <li className="h-4">
-      {bookmarkList.map((url, index) => {
+      {searchBookmarkList.map((url, index) => {
         return (
           <>
             <div

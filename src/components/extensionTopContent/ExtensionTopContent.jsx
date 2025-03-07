@@ -1,12 +1,20 @@
-import "../../index.css";
+import useFetchUrlContent from "../../hooks/useFetchUrlContent";
 import GlobalNavigationBar from "./top-contents/GlobalNavigationBar";
 import KeywordSearchBox from "./top-contents/KeywordSearchBox";
 
 export default function ExtensionTopContent() {
+  const { isLoading, isError } = useFetchUrlContent();
+
   return (
     <div className="fixed p-3 bg-black w-full h-28 block top-0">
-      <GlobalNavigationBar />
-      <KeywordSearchBox />
+      <GlobalNavigationBar
+        isLoading={isLoading}
+        isError={isError}
+      />
+      <KeywordSearchBox
+        isLoading={isLoading}
+        isError={isError}
+      />
     </div>
   );
 }

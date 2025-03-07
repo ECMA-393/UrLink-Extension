@@ -1,40 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import ExtensionContext from "../context/ExtensionContext";
-import useFetchUrlContent from "../hooks/useFetchUrlContent";
+import useBookmarks from "../hooks/useBookmarks";
 import ExtensionBottomContent from "./extensionBottomContent/ExtensionBottomContent";
 import ExtensionTopContent from "./extensionTopContent/extensionTopContent";
 
-function ExtensionContent({ urlNewList }) {
-  const [bookmarkList, setBookmarkList] = useState([]);
+function ExtensionContent() {
+  const allBookmarkList = useBookmarks();
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [keyword, setKeyword, isLoading, error] = useFetchUrlContent(
-    setBookmarkList,
-    urlNewList
-  );
+  const [searchBookmarkList, setSearchBookmarkList] = useState([]);
 
-  const handleStartSearch = () => {
-    if (!isLoading) {
-      setKeyword(searchKeyword);
-    }
-  };
+  useEffect(() => {
+    setSearchBookmarkList(allBookmarkList);
+  }, [allBookmarkList]);
 
   return (
     <ExtensionContext.Provider
       value={{
-        bookmarkList,
-        urlNewList,
-        setBookmarkList,
-        handleStartSearch,
-        keyword,
+        allBookmarkList,
+        searchBookmarkList,
+        setSearchBookmarkList,
         searchKeyword,
         setSearchKeyword,
-        isLoading,
       }}
     >
       <ExtensionTopContent />
-      {isLoading ? <h1>로딩 중입니다.</h1> : <ExtensionBottomContent />}
-      {error && <h1>{error}</h1>}
+      <ExtensionBottomContent />
     </ExtensionContext.Provider>
   );
 }
