@@ -1,32 +1,21 @@
-import { useEffect, useState } from "react";
-
-import ExtensionContext from "../context/ExtensionContext";
-import useBookmarks from "../hooks/useBookmarks";
+import useFetchUrlContent from "../hooks/useFetchUrlContent";
 import ExtensionBottomContent from "./extensionBottomContent/ExtensionBottomContent";
-import ExtensionTopContent from "./extensionTopContent/extensionTopContent";
+import ExtensionTopContent from "./extensionTopContent/ExtensionTopContent";
 
 function ExtensionContent() {
-  const allBookmarkList = useBookmarks();
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [searchBookmarkList, setSearchBookmarkList] = useState([]);
-
-  useEffect(() => {
-    setSearchBookmarkList(allBookmarkList);
-  }, [allBookmarkList]);
+  const { isLoading, isError } = useFetchUrlContent();
 
   return (
-    <ExtensionContext.Provider
-      value={{
-        allBookmarkList,
-        searchBookmarkList,
-        setSearchBookmarkList,
-        searchKeyword,
-        setSearchKeyword,
-      }}
-    >
-      <ExtensionTopContent />
-      <ExtensionBottomContent />
-    </ExtensionContext.Provider>
+    <>
+      <ExtensionTopContent
+        isLoading={isLoading}
+        isError={isError}
+      />
+      <ExtensionBottomContent
+        isLoading={isLoading}
+        isError={isError}
+      />
+    </>
   );
 }
 

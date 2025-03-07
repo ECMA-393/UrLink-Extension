@@ -19,6 +19,7 @@ const useFetchUrlContent = () => {
         return;
       }
 
+      setSearchBookmarkList([]);
       setError(null);
       let index = 0;
 
