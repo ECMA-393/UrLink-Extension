@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { WebSearchContext } from "../context/WebSearchContext";
+import WebSideSearchHistory from "./WebSideSearchHistory";
 import WebBottomContent from "./webBottomContent/WebBottomContent";
 import WebTopContent from "./webTopContent/WebTopContent";
 
@@ -19,8 +20,11 @@ function WebContent() {
           setSearchKeyword,
         }}
       >
-        <WebTopContent urlNewList={urlNewList} />
-        <WebBottomContent urlNewList={urlNewList} />
+        <WebSideSearchHistory />
+        <div>
+          <WebTopContent urlNewList={urlNewList} />
+          <WebBottomContent urlNewList={urlNewList} />
+        </div>
       </WebSearchContext.Provider>
     </div>
   );
