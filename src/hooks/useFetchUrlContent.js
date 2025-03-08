@@ -1,5 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 
+
 import { URL_TEMPLATES } from "../constants/constants";
 import ExtensionContext from "../context/ExtensionContext";
 
