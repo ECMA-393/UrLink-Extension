@@ -2,10 +2,11 @@ import { faMagnifyingGlass, faRotate } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useState } from "react";
 
+import { SEARCH_MODE } from "../../../constants/constants";
 import ExtensionContext from "../../../context/ExtensionContext";
 
 export default function KeywordSearchBox({ isLoading }) {
-  const { setSearchKeyword } = useContext(ExtensionContext);
+  const { setSearchMode, setSearchKeyword } = useContext(ExtensionContext);
   const [inputKeyword, setInputKeyword] = useState("");
 
   const handleInputKeyword = (event) => {
@@ -31,8 +32,22 @@ export default function KeywordSearchBox({ isLoading }) {
     setSearchKeyword("");
   };
 
+  const handleSearchModeChange = (event) => {
+    setSearchMode(event.currentTarget.value);
+  };
+
   return (
     <div className="w-full h-10 rounded-full bg-white/[.5] text-white flex">
+      <select
+        defaultValue={SEARCH_MODE.CONTENT}
+        className="pl-4 bg-transparent h-10 text-sm placeholder-white grow outline-none"
+        onChange={handleSearchModeChange}
+        disabled={isLoading}
+      >
+        <option value={SEARCH_MODE.CONTENT}>내용</option>
+        <option value={SEARCH_MODE.TITLE}>제목</option>
+        <option value={SEARCH_MODE.ALL}>제목+내용</option>
+      </select>
       <input
         className="pl-4 bg-transparent h-10 text-sm placeholder-white grow outline-none"
         type="text"

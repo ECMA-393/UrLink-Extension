@@ -6,6 +6,7 @@ import useBookmarks from "./hooks/useBookmarks";
 
 function App() {
   const allBookmarkList = useBookmarks();
+  const [searchMode, setSearchMode] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchBookmarkList, setSearchBookmarkList] = useState([]);
 
@@ -16,6 +17,8 @@ function App() {
   return (
     <ExtensionContext.Provider
       value={{
+        searchMode,
+        setSearchMode,
         allBookmarkList,
         searchBookmarkList,
         setSearchBookmarkList,
