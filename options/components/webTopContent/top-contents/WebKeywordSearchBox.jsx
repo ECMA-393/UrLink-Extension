@@ -5,7 +5,7 @@ export default function WebKeywordSearchBox() {
   return (
     <div>
       <h2 className="me-5 mb-5 font-bold">
-        <span>Urlink</span>
+        <span>Urlink ::</span>
         <span>WEB VIEW</span>
       </h2>
       <p className="relative flex-1 h-10 rounded-lg bg-black text-white flex">

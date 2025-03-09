@@ -1,37 +1,31 @@
 import { useEffect, useState } from "react";
 
 import ExtensionContent from "./components/ExtensionContent";
+import ExtensionContext from "./context/ExtensionContext";
+import useBookmarks from "./hooks/useBookmarks";
 
 function App() {
-  const [urlNewList, setUrlNewList] = useState([]);
-
-  const getNewTree = (nodeItems) => {
-    const getNewTreeResult = [];
-
-    function recursive(node) {
-      if (Array.isArray(node)) {
-        node.forEach((item) => recursive(item));
-      } else if (typeof node === "object" && node !== null) {
-        if (node.children) {
-          recursive(node.children);
-        }
-        if (node.title && node.url) {
-          getNewTreeResult.push(node);
-        }
-      }
-      return getNewTreeResult;
-    }
-    const newTree = recursive(nodeItems);
-    setUrlNewList(newTree);
-  };
+  const allBookmarkList = useBookmarks();
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchBookmarkList, setSearchBookmarkList] = useState([]);
 
   useEffect(() => {
-    chrome.bookmarks.getTree((treeList) => {
-      getNewTree(treeList);
-    });
-  }, []);
+    setSearchBookmarkList(allBookmarkList);
+  }, [allBookmarkList]);
 
-  return <ExtensionContent urlNewList={urlNewList} />;
+  return (
+    <ExtensionContext.Provider
+      value={{
+        allBookmarkList,
+        searchBookmarkList,
+        setSearchBookmarkList,
+        searchKeyword,
+        setSearchKeyword,
+      }}
+    >
+      <ExtensionContent />
+    </ExtensionContext.Provider>
+  );
 }
 
 export default App;

@@ -1,41 +1,21 @@
-import { useState } from "react";
-
-import ExtensionContext from "../context/ExtensionContext";
 import useFetchUrlContent from "../hooks/useFetchUrlContent";
 import ExtensionBottomContent from "./extensionBottomContent/ExtensionBottomContent";
-import ExtensionTopContent from "./extensionTopContent/extensionTopContent";
+import ExtensionTopContent from "./extensionTopContent/ExtensionTopContent";
 
-function ExtensionContent({ urlNewList }) {
-  const [bookmarkList, setBookmarkList] = useState([]);
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [keyword, setKeyword, isLoading, error] = useFetchUrlContent(
-    setBookmarkList,
-    urlNewList
-  );
-
-  const handleStartSearch = () => {
-    if (!isLoading) {
-      setKeyword(searchKeyword);
-    }
-  };
+function ExtensionContent() {
+  const { isLoading, isError } = useFetchUrlContent();
 
   return (
-    <ExtensionContext.Provider
-      value={{
-        bookmarkList,
-        urlNewList,
-        setBookmarkList,
-        handleStartSearch,
-        keyword,
-        searchKeyword,
-        setSearchKeyword,
-        isLoading,
-      }}
-    >
-      <ExtensionTopContent />
-      {isLoading ? <h1>로딩 중입니다.</h1> : <ExtensionBottomContent />}
-      {error && <h1>{error}</h1>}
-    </ExtensionContext.Provider>
+    <>
+      <ExtensionTopContent
+        isLoading={isLoading}
+        isError={isError}
+      />
+      <ExtensionBottomContent
+        isLoading={isLoading}
+        isError={isError}
+      />
+    </>
   );
 }
 

@@ -1,82 +1,95 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 import { SERVER_URL } from "../constants/constants";
+import ExtensionContext from "../context/ExtensionContext";
 
-const useFetchUrlContent = (setCrawledResult, savedList) => {
-  const [keyword, setKeyword] = useState("");
+const useFetchUrlContent = () => {
+  const { allBookmarkList, setSearchBookmarkList, searchKeyword } =
+    useContext(ExtensionContext);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const getCrawledData = useCallback(async () => {
     try {
-      setError(null);
-      const fetchEncodedUrlList = savedList.map((bookmark) => {
-        const encodedUrl = encodeURIComponent(bookmark.url);
+      const bookmarkList = [...allBookmarkList];
+      let finalBookmarkList = [];
 
-        if (keyword) {
-          return fetch(
-            `${SERVER_URL}/crawl/${encodedUrl}/search?keyword=${keyword}`
-          );
-        } else {
-          setCrawledResult(savedList);
-        }
-      });
-
-      if (keyword) {
-        chrome.storage.session.remove("webBookmarkList");
-
-        const fetchedResultList = await Promise.allSettled(fetchEncodedUrlList);
-        const fetchedParseList = [];
-
-        for (const fetchedResult of fetchedResultList) {
-          if (fetchedResult.status === "fulfilled") {
-            const fetchedResultValue = fetchedResult.value;
-
-            if (fetchedResultValue.ok) {
-              fetchedParseList.push(await fetchedResultValue.json());
-            }
-          }
-        }
-
-        const filteredList = fetchedParseList.filter((filteredItem) => {
-          if (filteredItem.hasKeyword) {
-            return filteredItem;
-          }
-        });
-
-        if (filteredList.length === 0) {
-          setError("검색 결과가 없습니다.");
-        }
-
-        const searchResultList = filteredList.map((filteredItem) => {
-          for (let i = 0; i < savedList.length; i++) {
-            if (savedList[i].url === filteredItem.url) {
-              return { ...filteredItem, ...savedList[i] };
-            }
-          }
-        });
-
-        chrome.storage.session.set({
-          webBookmarkList: { keyword, searchResultList },
-        });
-        setCrawledResult(searchResultList);
+      if (!searchKeyword) {
+        setSearchBookmarkList(allBookmarkList);
+        return;
       }
 
-      chrome.storage.session.set({ webIsLoading: false });
-      setIsLoading(false);
+      setSearchBookmarkList([]);
+      setError(null);
+      let index = 0;
+
+      const fetchBookmarkChunk = async () => {
+        const chunkedBookmarkList = bookmarkList.slice(index, index + 5);
+
+        const fetchEncodedUrlList = chunkedBookmarkList.map((bookmark) => {
+          const encodedUrl = encodeURIComponent(bookmark.url);
+
+          if (searchKeyword) {
+            return fetch(
+              `${SERVER_URL}/crawl/${encodedUrl}/search?keyword=${searchKeyword}`
+            );
+          }
+        });
+
+        if (fetchEncodedUrlList) {
+          const searchResultList =
+            await Promise.allSettled(fetchEncodedUrlList);
+          const searchedBookmarkList = [];
+
+          for (const resultList of searchResultList) {
+            if (resultList.status === "fulfilled") {
+              const searchItem = resultList.value;
+
+              if (searchItem.ok) {
+                searchedBookmarkList.push(await searchItem.json());
+              }
+            }
+          }
+
+          const filterBookmarkList = searchedBookmarkList.filter(
+            (bookmarkItem) => bookmarkItem.hasKeyword
+          );
+
+          const resultBookmarkList = filterBookmarkList.map((bookmarkItem) => {
+            for (let i = 0; i < allBookmarkList.length; i++) {
+              if (allBookmarkList[i].url === bookmarkItem.url) {
+                return { ...bookmarkItem, ...allBookmarkList[i] };
+              }
+            }
+          });
+
+          if (resultBookmarkList) {
+            finalBookmarkList = [...finalBookmarkList, ...resultBookmarkList];
+            setSearchBookmarkList(finalBookmarkList);
+          }
+        }
+
+        index += 5;
+
+        if (index < bookmarkList.length) {
+          await fetchBookmarkChunk();
+        }
+      };
+
+      await fetchBookmarkChunk();
     } catch (error) {
       setError(error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [keyword, savedList, setCrawledResult]);
+  }, [allBookmarkList, searchKeyword, setSearchBookmarkList]);
 
   useEffect(() => {
-    chrome.storage.session.set({ webIsLoading: true });
-
     setIsLoading(true);
     getCrawledData();
   }, [getCrawledData]);
 
-  return [keyword, setKeyword, isLoading, error];
+  return { isLoading, error };
 };
 
 export default useFetchUrlContent;
