@@ -1,10 +1,10 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 
-import { SERVER_URL } from "../constants/constants";
+import { URL_TEMPLATES } from "../constants/constants";
 import ExtensionContext from "../context/ExtensionContext";
 
 const useFetchUrlContent = () => {
-  const { allBookmarkList, setSearchBookmarkList, searchKeyword } =
+  const { allBookmarkList, searchMode, setSearchBookmarkList, searchKeyword } =
     useContext(ExtensionContext);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -28,11 +28,10 @@ const useFetchUrlContent = () => {
 
         const fetchEncodedUrlList = chunkedBookmarkList.map((bookmark) => {
           const encodedUrl = encodeURIComponent(bookmark.url);
+          const fetchUrl = URL_TEMPLATES[searchMode](encodedUrl, searchKeyword);
 
           if (searchKeyword) {
-            return fetch(
-              `${SERVER_URL}/crawl/${encodedUrl}/search?keyword=${searchKeyword}`
-            );
+            return fetch(fetchUrl);
           }
         });
 
@@ -55,13 +54,27 @@ const useFetchUrlContent = () => {
             (bookmarkItem) => bookmarkItem.hasKeyword
           );
 
+          const bookmarkAllInnerText = [];
           const resultBookmarkList = filterBookmarkList.map((bookmarkItem) => {
             for (let i = 0; i < allBookmarkList.length; i++) {
               if (allBookmarkList[i].url === bookmarkItem.url) {
+                bookmarkAllInnerText.push({
+                  [`${bookmarkItem.url}`]: bookmarkItem.urlAllText,
+                });
+
                 return { ...bookmarkItem, ...allBookmarkList[i] };
               }
             }
           });
+
+          const localBookmarkList = await chrome.storage.local.get([
+            searchKeyword,
+          ]);
+          const currentValue =
+            index !== 0 ? localBookmarkList[searchKeyword] : [];
+
+          const updatedValue = [...currentValue, ...bookmarkAllInnerText];
+          await chrome.storage.local.set({ [searchKeyword]: updatedValue });
 
           if (resultBookmarkList) {
             finalBookmarkList = [...finalBookmarkList, ...resultBookmarkList];
@@ -82,7 +95,7 @@ const useFetchUrlContent = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [allBookmarkList, searchKeyword, setSearchBookmarkList]);
+  }, [allBookmarkList, searchKeyword, searchMode, setSearchBookmarkList]);
 
   useEffect(() => {
     setIsLoading(true);
