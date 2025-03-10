@@ -54,13 +54,27 @@ const useFetchUrlContent = () => {
             (bookmarkItem) => bookmarkItem.hasKeyword
           );
 
+          const bookmarkAllInnerText = [];
           const resultBookmarkList = filterBookmarkList.map((bookmarkItem) => {
             for (let i = 0; i < allBookmarkList.length; i++) {
               if (allBookmarkList[i].url === bookmarkItem.url) {
+                bookmarkAllInnerText.push({
+                  [`${bookmarkItem.url}`]: bookmarkItem.urlAllText,
+                });
+
                 return { ...bookmarkItem, ...allBookmarkList[i] };
               }
             }
           });
+
+          const localBookmarkList = await chrome.storage.local.get([
+            searchKeyword,
+          ]);
+          const currentValue =
+            index !== 0 ? localBookmarkList[searchKeyword] : [];
+
+          const updatedValue = [...currentValue, ...bookmarkAllInnerText];
+          await chrome.storage.local.set({ [searchKeyword]: updatedValue });
 
           if (resultBookmarkList) {
             finalBookmarkList = [...finalBookmarkList, ...resultBookmarkList];
