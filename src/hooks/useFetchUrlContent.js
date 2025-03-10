@@ -3,11 +3,50 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { URL_TEMPLATES } from "../constants/constants";
 import ExtensionContext from "../context/ExtensionContext";
 
+const STORAGE_LIMIT = 10 * 1024 * 1024;
+
 const useFetchUrlContent = () => {
   const { allBookmarkList, searchMode, setSearchBookmarkList, searchKeyword } =
     useContext(ExtensionContext);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  async function checkChromeStorageUsage() {
+    return new Promise((resolve) => {
+      chrome.storage.local.getBytesInUse(null, (bytesInUse) => {
+        resolve(bytesInUse);
+      });
+    });
+  }
+
+  async function removeAnyData() {
+    return new Promise((resolve) => {
+      chrome.storage.local.get(null, async (items) => {
+        const keys = Object.keys(items);
+        if (keys.length === 0) {
+          return resolve();
+        }
+
+        const keyToDelete = keys[0];
+        await new Promise((res) =>
+          chrome.storage.local.remove(keyToDelete, res)
+        );
+        resolve();
+      });
+    });
+  }
+
+  async function saveDataWithStorageCheck(key, data) {
+    const newDataSize = new Blob([JSON.stringify(data)]).size;
+    let availableSpace = STORAGE_LIMIT - (await checkChromeStorageUsage());
+
+    while (availableSpace < newDataSize) {
+      await removeAnyData();
+      availableSpace = STORAGE_LIMIT - (await checkChromeStorageUsage());
+    }
+
+    chrome.storage.local.set({ [key]: data });
+  }
 
   const getCrawledData = useCallback(async () => {
     try {
@@ -74,7 +113,9 @@ const useFetchUrlContent = () => {
             index !== 0 ? localBookmarkList[searchKeyword] : [];
 
           const updatedValue = [...currentValue, ...bookmarkAllInnerText];
-          await chrome.storage.local.set({ [searchKeyword]: updatedValue });
+
+          const key = `${searchKeyword}_${Date.now()}`;
+          await saveDataWithStorageCheck(key, updatedValue);
 
           if (resultBookmarkList) {
             finalBookmarkList = [...finalBookmarkList, ...resultBookmarkList];
