@@ -59,7 +59,10 @@ const useFetchUrlContent = () => {
             for (let i = 0; i < allBookmarkList.length; i++) {
               if (allBookmarkList[i].url === bookmarkItem.url) {
                 bookmarkAllInnerText.push({
-                  [`${bookmarkItem.url}`]: bookmarkItem,
+                  [`${bookmarkItem.url}`]: {
+                    ...bookmarkItem,
+                    ...allBookmarkList[i],
+                  },
                 });
 
                 return { ...bookmarkItem, ...allBookmarkList[i] };
