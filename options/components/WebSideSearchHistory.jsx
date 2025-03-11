@@ -21,7 +21,7 @@ function SearchHistoryBox() {
       <div className="mt-5 flex justify-between">
         <SearchHistoryButton
           color={`bg-blue-700`}
-          message={`추가 검색`}
+          message={`재 검색`}
         />
         <SearchHistoryButton
           color={`bg-red-700`}
