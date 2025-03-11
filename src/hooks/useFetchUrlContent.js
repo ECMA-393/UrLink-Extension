@@ -11,42 +11,49 @@ const useFetchUrlContent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  async function checkChromeStorageUsage() {
+  const checkChromeStorageUsage = useCallback(async () => {
     return new Promise((resolve) => {
       chrome.storage.local.getBytesInUse(null, (bytesInUse) => {
         resolve(bytesInUse);
       });
     });
-  }
+  }, []);
 
-  async function removeAnyData() {
+  const removeAnyData = useCallback(async () => {
     return new Promise((resolve) => {
       chrome.storage.local.get(null, async (items) => {
         const keys = Object.keys(items);
-        if (keys.length === 0) {
+        const notDeletedKeys = ["initialSearchValue"];
+        const deletableKeys = keys.filter(
+          (key) => !notDeletedKeys.includes(key)
+        );
+
+        if (deletableKeys.length === 0) {
           return resolve();
         }
 
-        const keyToDelete = keys[0];
-        await new Promise((res) =>
-          chrome.storage.local.remove(keyToDelete, res)
-        );
+        const deleteKey = deletableKeys[0];
+        await new Promise((res) => chrome.storage.local.remove(deleteKey, res));
+
         resolve();
       });
     });
-  }
+  }, []);
 
-  async function saveDataWithStorageCheck(key, data) {
-    const newDataSize = new Blob([JSON.stringify(data)]).size;
-    let availableSpace = STORAGE_LIMIT - (await checkChromeStorageUsage());
+  const saveDataWithStorageCheck = useCallback(
+    async (key, data) => {
+      const newDataSize = new Blob([JSON.stringify(data)]).size;
+      let availableSpace = STORAGE_LIMIT - (await checkChromeStorageUsage());
 
-    while (availableSpace < newDataSize) {
-      await removeAnyData();
-      availableSpace = STORAGE_LIMIT - (await checkChromeStorageUsage());
-    }
+      while (availableSpace < newDataSize) {
+        await removeAnyData();
+        availableSpace = STORAGE_LIMIT - (await checkChromeStorageUsage());
+      }
 
-    chrome.storage.local.set({ [key]: data });
-  }
+      chrome.storage.local.set({ [key]: data });
+    },
+    [checkChromeStorageUsage, removeAnyData]
+  );
 
   const getCrawledData = useCallback(async () => {
     try {
@@ -98,7 +105,10 @@ const useFetchUrlContent = () => {
             for (let i = 0; i < allBookmarkList.length; i++) {
               if (allBookmarkList[i].url === bookmarkItem.url) {
                 bookmarkAllInnerText.push({
-                  [`${bookmarkItem.url}`]: bookmarkItem.urlAllText,
+                  [`${bookmarkItem.url}`]: {
+                    ...bookmarkItem,
+                    ...allBookmarkList[i],
+                  },
                 });
 
                 return { ...bookmarkItem, ...allBookmarkList[i] };
@@ -136,7 +146,13 @@ const useFetchUrlContent = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [allBookmarkList, searchKeyword, searchMode, setSearchBookmarkList]);
+  }, [
+    allBookmarkList,
+    searchKeyword,
+    searchMode,
+    setSearchBookmarkList,
+    saveDataWithStorageCheck,
+  ]);
 
   useEffect(() => {
     setIsLoading(true);
