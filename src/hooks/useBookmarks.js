@@ -4,25 +4,26 @@ const useBookmarks = () => {
   const [bookmarkList, setBookmarkList] = useState([]);
 
   useEffect(() => {
-    const getAllBookmark = (nodeItems) => {
+    function getAllBookmark(nodeItems) {
       const newBookmarkList = [];
+      const stack = [...nodeItems];
 
-      function recursive(node) {
+      while (stack.length) {
+        const node = stack.pop();
         if (Array.isArray(node)) {
-          node.forEach((item) => recursive(item));
+          stack.push(...node);
         } else if (typeof node === "object" && node !== null) {
           if (node.children) {
-            recursive(node.children);
+            stack.push(...node.children);
           }
           if (node.title && node.url) {
             newBookmarkList.push(node);
           }
         }
-        return newBookmarkList;
       }
 
-      setBookmarkList(recursive(nodeItems));
-    };
+      setBookmarkList(newBookmarkList);
+    }
 
     chrome.bookmarks.getTree((treeList) => {
       getAllBookmark(treeList);

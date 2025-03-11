@@ -4,12 +4,15 @@ import { useContext } from "react";
 
 import ExtensionContext from "../../../context/ExtensionContext";
 
-export default function GlobalNavigationBar({ isLoading }) {
+export default function GlobalNavigationBar({ isLoading, inputKeyword }) {
   const { allBookmarkList, searchBookmarkList } = useContext(ExtensionContext);
 
   const handleOnClickOpenOptionPage = () => {
-    if (chrome.runtime.openOptionsPage) {
+    if (chrome.runtime.openOptionsPage && inputKeyword) {
+      chrome.storage.local.set({ initialSearchValue: inputKeyword });
       chrome.runtime.openOptionsPage();
+    } else {
+      alert("키워드 검색 후 열람 할 수 있습니다.");
     }
   };
   <FontAwesomeIcon

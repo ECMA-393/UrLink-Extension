@@ -1,13 +1,16 @@
 import { faMagnifyingGlass, faRotate } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 import { SEARCH_MODE } from "../../../constants/constants";
 import ExtensionContext from "../../../context/ExtensionContext";
 
-export default function KeywordSearchBox({ isLoading }) {
+export default function KeywordSearchBox({
+  isLoading,
+  inputKeyword,
+  setInputKeyword,
+}) {
   const { setSearchMode, setSearchKeyword } = useContext(ExtensionContext);
-  const [inputKeyword, setInputKeyword] = useState("");
 
   const handleInputKeyword = (event) => {
     if (isLoading) {
