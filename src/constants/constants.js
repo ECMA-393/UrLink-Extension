@@ -1,4 +1,5 @@
 export const SERVER_URL = "http://localhost:3000/crawl";
+export const STORAGE_LIMIT = 9 * 1024 * 1024;
 
 export const SEARCH_MODE = {
   CONTENT: "내용",
