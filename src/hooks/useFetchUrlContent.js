@@ -122,6 +122,7 @@ const useFetchUrlContent = () => {
                   [`${bookmarkItem.url}`]: {
                     ...bookmarkItem,
                     ...allBookmarkList[i],
+                    timestamp: Date.now(),
                   },
                 });
 
