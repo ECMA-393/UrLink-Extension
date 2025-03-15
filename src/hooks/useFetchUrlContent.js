@@ -4,15 +4,11 @@ import { STORAGE_LIMIT, URL_TEMPLATES } from "../constants/constants";
 import ExtensionContext from "../context/ExtensionContext";
 
 const getUsedStorageSize = async () => {
-  return new Promise((resolve, reject) => {
-    chrome.storage.local.getBytesInUse(null, (bytesInUse) => {
-      if (chrome.runtime.lastError) {
-        reject(chrome.runtime.lastError);
-      } else {
-        resolve(bytesInUse);
-      }
-    });
-  });
+  try {
+    return await chrome.storage.local.getBytesInUse(null);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const calculateAvailableStorage = async () => {
@@ -26,9 +22,7 @@ const calculateDataSize = (data) => {
 };
 
 const deleteOldestData = async (requiredSpace) => {
-  const storedData = await new Promise((resolve) => {
-    chrome.storage.local.get(null, (items) => resolve(items));
-  });
+  const storedData = await chrome.storage.local.get(null);
 
   const sortedKeys = Object.keys(storedData).sort((a, b) => {
     return storedData[a].timestamp - storedData[b].timestamp;
@@ -37,7 +31,7 @@ const deleteOldestData = async (requiredSpace) => {
   let freeSpace = 0;
   for (const key of sortedKeys) {
     const dataSize = calculateDataSize(storedData[key]);
-    await new Promise((resolve) => chrome.storage.local.remove(key, resolve));
+    await chrome.storage.local.remove(key);
 
     freeSpace += dataSize;
     if (freeSpace >= requiredSpace) {
@@ -55,11 +49,9 @@ const saveDataWithStorageCheck = async (data, keyword) => {
       await deleteOldestData(dataSize - availableSpace);
     }
 
-    await new Promise((resolve) => {
-      chrome.storage.local.set({ [keyword]: data }, resolve);
-    });
+    await chrome.storage.local.set({ [keyword]: data });
   } catch (error) {
-    console.log("스토리지 저장 오류:", error);
+    console.error(error);
   }
 };
 
