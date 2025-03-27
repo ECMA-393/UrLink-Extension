@@ -9,7 +9,6 @@ export default function GlobalNavigationBar({ isLoading, inputKeyword }) {
 
   const handleOnClickOpenOptionPage = () => {
     if (chrome.runtime.openOptionsPage && inputKeyword) {
-      chrome.storage.local.set({ initialSearchValue: inputKeyword });
       chrome.runtime.openOptionsPage();
     } else {
       alert("키워드 검색 후 열람 할 수 있습니다.");

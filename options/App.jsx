@@ -4,31 +4,25 @@ import WebContent from "./components/WebContnet";
 import { WebSearchContext } from "./context/WebSearchContext";
 
 function App() {
-  const [searchValue, setSearchValue] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [urlNewList, setUrlNewList] = useState([]);
-
+  const [latestArticles, setLatestArticles] = useState([]);
   useEffect(() => {
-    chrome.storage.local.get(["initialSearchValue"], (result) => {
-      if (result.initialSearchValue) {
-        setSearchValue(result.initialSearchValue);
-      }
+    chrome.storage.local.get(null, (items) => {
+      const getLocalValueList = Object.keys(items);
+      setLatestArticles(getLocalValueList);
     });
   }, []);
 
   return (
     <WebSearchContext.Provider
       value={{
-        searchValue,
-        setUrlNewList,
+        latestArticles,
+        setLatestArticles,
         searchKeyword,
         setSearchKeyword,
       }}
     >
-      <WebContent
-        searchValue={searchValue}
-        urlNewList={urlNewList}
-      />
+      <WebContent />
     </WebSearchContext.Provider>
   );
 }
