@@ -5,19 +5,32 @@ import { WebSearchContext } from "./context/WebSearchContext";
 
 function App() {
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [latestArticles, setLatestArticles] = useState([]);
+  const [filteredData, setFilteredData] = useState({});
+
   useEffect(() => {
+    let maxTimestamp = -Infinity;
+    let latestKeyword = {};
+
     chrome.storage.local.get(null, (items) => {
-      const getLocalValueList = Object.keys(items);
-      setLatestArticles(getLocalValueList);
+      for (let keyword in items) {
+        const keywardObj = items[keyword][0];
+        const keywordObjTimestamp = Object.values(keywardObj)[0].timestamp;
+
+        if (keywordObjTimestamp > maxTimestamp) {
+          maxTimestamp = keywordObjTimestamp;
+          latestKeyword = {
+            [keyword]: items[keyword],
+          };
+        }
+      }
+      setFilteredData(latestKeyword);
     });
   }, []);
 
   return (
     <WebSearchContext.Provider
       value={{
-        latestArticles,
-        setLatestArticles,
+        filteredData,
         searchKeyword,
         setSearchKeyword,
       }}
