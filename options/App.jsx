@@ -5,6 +5,7 @@ import { WebSearchContext } from "./context/WebSearchContext";
 
 function App() {
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [reSearchKeyword, setReSearchKeyword] = useState(searchKeyword);
   const [filteredData, setFilteredData] = useState({});
 
   useEffect(() => {
@@ -21,18 +22,24 @@ function App() {
           latestKeyword = {
             [keyword]: items[keyword],
           };
+          setSearchKeyword(`${keyword}`);
         }
       }
       setFilteredData(latestKeyword);
     });
   }, []);
 
+  useEffect(() => {
+    setReSearchKeyword(searchKeyword);
+  }, [searchKeyword]);
+
   return (
     <WebSearchContext.Provider
       value={{
         filteredData,
         searchKeyword,
-        setSearchKeyword,
+        reSearchKeyword,
+        setReSearchKeyword,
       }}
     >
       <WebContent />
