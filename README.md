@@ -71,7 +71,7 @@ chrome.bookmarks.getTree((treeList) => {
     </tr>
     <tr>
       <td>
-        <img width="400" src="https://github.com/user-attachments/assets/60ddd5bd-6567-47bd-adb4-99991bf00ce6" />
+        <img width="400" src="https://github.com/user-attachments/assets/26559c09-60b1-44fc-915b-c76e2206cece" />
       </td>
     </tr>
   </table>
@@ -86,14 +86,14 @@ chrome.bookmarks.getTree((treeList) => {
       <th>비재귀 방식</th>
     </tr>
     <tr>
-      <td><img width="418" alt="스크린샷 2025-03-11 오후 2 26 40" src="https://github.com/user-attachments/assets/f0bb1cab-f4f3-4e01-8dd2-f1e2499ef010" /></td>
-      <td><img width="417" alt="스크린샷 2025-03-11 오후 2 45 24" src="https://github.com/user-attachments/assets/54aa3cb9-4ccd-4773-9bac-db4031b17a13" /></td>
+      <td><img width="418" alt="스크린샷 2025-03-11 오후 2 26 40" src="https://github.com/user-attachments/assets/79c0485d-9003-4fbe-8a09-022c6fde9557" /></td>
+      <td><img width="417" alt="스크린샷 2025-03-11 오후 2 45 24" src="https://github.com/user-attachments/assets/41132adf-c6e8-4210-a1ee-55584d1884f3" /></td>
     </tr>
   </table>
 </div>
 
 평탄화가 필요했던 이유는 트리 구조는 React상태 관리시 불변성을 지키기 힘들고, 값을 꺼내야 할 때 불편함이 존재하기 때문에 저희가 사용할 목적에 맞는 자료구조로의 개선이 필요했기 때문입니다.<br />
-따라서, 아래 코드처럼 while을 사용한 비재귀적 방식으로 스택 오버플로우를 회피하면서 중첩 구조의 북마크 객체를 평탄화 할 수 있었습니다.
+따라서, 아래 코드처럼 while을 사용해 비재귀적 방식으로 DFS(Depth-First Search)를 구현하여 스택 오버플로우를 회피하면서 중첩 구조의 북마크 객체를 평탄화 할 수 있었습니다.
 ```js
 const getAllBookmark = (nodeItems) => {
   const newBookmarkList = [];
