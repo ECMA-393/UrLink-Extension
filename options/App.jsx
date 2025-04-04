@@ -10,7 +10,7 @@ function App() {
   const [filteredData, setFilteredData] = useState({});
   const [sortedHistory, setSortedHistory] = useState([]);
 
-  useEffect(() => {
+  const fetchStorageData = () => {
     chrome.storage.local.get(null, (items) => {
       let overallMaxTimestamp = -Infinity;
       let latestKeyword = {};
@@ -40,7 +40,11 @@ function App() {
       setFilteredData(latestKeyword);
       setSortedHistory(historyArray);
     });
-  }, [sortedHistory]);
+  };
+
+  useEffect(() => {
+    fetchStorageData();
+  }, []);
 
   useEffect(() => {
     setReSearchKeyword(searchKeyword);
@@ -55,6 +59,7 @@ function App() {
         reSearchKeyword,
         setReSearchKeyword,
         setSortedHistory,
+        refreshHistory: fetchStorageData,
       }}
     >
       <WebContent />

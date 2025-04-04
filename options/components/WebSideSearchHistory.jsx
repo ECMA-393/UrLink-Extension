@@ -5,10 +5,27 @@ import { useContext } from "react";
 import { WebSearchContext } from "../context/WebSearchContext";
 
 export default function WebSideSearchHistory() {
-  const { sortedHistory, setSortedHistory } = useContext(WebSearchContext);
+  const MAX_RETRY_ATTEMPTS = 3;
 
-  const deleteFromChromeStorage = (keyword) => {
-    chrome.storage.local.remove(keyword);
+  const { sortedHistory, refreshHistory, setSortedHistory } =
+    useContext(WebSearchContext);
+  const deleteFromChromeStorage = (keyword, attempt = 1) => {
+    chrome.storage.local.remove(keyword, () => {
+      if (chrome.runtime.lastError) {
+        console.error(
+          `삭제 오류 (시도 ${attempt}): ${chrome.runtime.lastError.message}`
+        );
+        if (attempt < MAX_RETRY_ATTEMPTS) {
+          setTimeout(() => {
+            deleteFromChromeStorage(keyword, attempt + 1);
+          }, 2000);
+        } else {
+          console.error(`${keyword}의 최대 재시도 횟수를 초과했습니다.`);
+        }
+      } else {
+        refreshHistory();
+      }
+    });
   };
 
   const hendleDeleteAndSortHistory = (keyword) => {
