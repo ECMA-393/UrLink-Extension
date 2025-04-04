@@ -7,8 +7,8 @@ import { WebSearchContext } from "../../../context/WebSearchContext";
 export default function WebKeywordSearchBox() {
   const { reSearchKeyword, setReSearchKeyword } = useContext(WebSearchContext);
 
-  const handleChange = (e) => {
-    setReSearchKeyword(e.target.value);
+  const handleChangeReSearchKeyword = (event) => {
+    setReSearchKeyword(event.target.value);
   };
 
   return (
@@ -30,7 +30,7 @@ export default function WebKeywordSearchBox() {
           name="searchBox"
           type="text"
           value={reSearchKeyword}
-          onChange={handleChange}
+          onChange={handleChangeReSearchKeyword}
           placeholder="키워드를 입력해 주세요."
         />
         <SearchOptionButton iconType={faRotate} />

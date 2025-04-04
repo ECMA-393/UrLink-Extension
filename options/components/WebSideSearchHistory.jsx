@@ -5,17 +5,26 @@ import { useContext } from "react";
 import { WebSearchContext } from "../context/WebSearchContext";
 
 export default function WebSideSearchHistory() {
-  const { sortedHistory } = useContext(WebSearchContext);
+  const { sortedHistory, setSortedHistory } = useContext(WebSearchContext);
+  const hendleDeleteAndSortHistory = (keyword) => {
+    const deleteAndSortHistory = sortedHistory.filter(
+      (innerData) => innerData.keyword !== keyword
+    );
+    setSortedHistory(deleteAndSortHistory);
+  };
 
   return (
     <div className="w-[300px] p-5">
       <h2 className="mb-5 font-bold">Extension Search History</h2>
-      <SearchHistoryBox sortedHistory={sortedHistory} />
+      <SearchHistoryBox
+        sortedHistory={sortedHistory}
+        hendleDeleteAndSortHistory={hendleDeleteAndSortHistory}
+      />
     </div>
   );
 }
 
-function SearchHistoryBox({ sortedHistory }) {
+function SearchHistoryBox({ sortedHistory, hendleDeleteAndSortHistory }) {
   return (
     <>
       {sortedHistory.map((innerData, index) => (
@@ -23,7 +32,10 @@ function SearchHistoryBox({ sortedHistory }) {
           className="w-full bg-white mb-3 px-3 py-2 rounded-lg relative cursor-pointer"
           key={index}
         >
-          <span className="absolute top-[10px] right-[10px] text-red-600">
+          <span
+            className="absolute top-[10px] right-[10px] text-red-600"
+            onClick={() => hendleDeleteAndSortHistory(innerData.keyword)}
+          >
             <FontAwesomeIcon icon={faXmark} />
           </span>
           <h5>

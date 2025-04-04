@@ -54,6 +54,7 @@ function App() {
         searchKeyword,
         reSearchKeyword,
         setReSearchKeyword,
+        setSortedHistory,
       }}
     >
       <WebContent />
