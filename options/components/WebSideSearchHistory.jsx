@@ -6,11 +6,17 @@ import { WebSearchContext } from "../context/WebSearchContext";
 
 export default function WebSideSearchHistory() {
   const { sortedHistory, setSortedHistory } = useContext(WebSearchContext);
+
+  const deleteFromChromeStorage = (keyword) => {
+    chrome.storage.local.remove(keyword);
+  };
+
   const hendleDeleteAndSortHistory = (keyword) => {
     const deleteAndSortHistory = sortedHistory.filter(
       (innerData) => innerData.keyword !== keyword
     );
     setSortedHistory(deleteAndSortHistory);
+    deleteFromChromeStorage(keyword);
   };
 
   return (

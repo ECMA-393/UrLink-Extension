@@ -40,7 +40,7 @@ function App() {
       setFilteredData(latestKeyword);
       setSortedHistory(historyArray);
     });
-  }, []);
+  }, [sortedHistory]);
 
   useEffect(() => {
     setReSearchKeyword(searchKeyword);
