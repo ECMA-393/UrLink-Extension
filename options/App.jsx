@@ -13,7 +13,7 @@ function App() {
   const fetchStorageData = () => {
     chrome.storage.local.get(null, (items) => {
       let overallMaxTimestamp = -Infinity;
-      let latestKeyword = {};
+      let latestItem = null;
       const historyArray = [];
 
       Object.entries(items).forEach(([keyword, data]) => {
@@ -22,22 +22,19 @@ function App() {
           return timestamp > max ? timestamp : max;
         }, -Infinity);
 
-        historyArray.push({
-          keyword,
-          data,
-          maxTimestamp: maxTimestampForCategory,
-        });
+        const item = { keyword, data, maxTimestamp: maxTimestampForCategory };
+        historyArray.push(item);
 
         if (maxTimestampForCategory > overallMaxTimestamp) {
           overallMaxTimestamp = maxTimestampForCategory;
-          latestKeyword = { [keyword]: data };
+          latestItem = item;
           setSearchKeyword(`${keyword}`);
         }
       });
 
       historyArray.sort((a, b) => b.maxTimestamp - a.maxTimestamp);
 
-      setFilteredData(latestKeyword);
+      setFilteredData(latestItem);
       setSortedHistory(historyArray);
     });
   };
