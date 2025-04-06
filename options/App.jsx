@@ -17,6 +17,8 @@ function App() {
       const historyArray = [];
 
       Object.entries(items).forEach(([keyword, data]) => {
+        if (!data || data.length === 0) return;
+
         const maxTimestampForCategory = data.reduce((max, entry) => {
           const timestamp = Object.values(entry)[0].timestamp;
           return timestamp > max ? timestamp : max;
