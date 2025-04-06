@@ -54,7 +54,7 @@ function HighlightKeyword({ bookmark }) {
   const { searchKeyword } = useContext(ExtensionContext);
 
   return (
-    <div className="ml-3 mt-1 mb-2 font-normal w-full max-w-[calc(100%-0px)] overflow-hidden text-ellipsis whitespace-nowrap">
+    <div className="ml-3 mt-1 mb-2 font-normal w-full max-w-[calc(95%-0px)] overflow-hidden text-ellipsis whitespace-nowrap">
       {bookmark.urlText.split(searchKeyword).map((item, index) => {
         if (item === "") {
           return;

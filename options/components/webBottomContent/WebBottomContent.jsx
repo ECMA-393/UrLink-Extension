@@ -12,7 +12,7 @@ export default function WebBottomContent() {
   const totalCount = changeArrayFilteredData.length;
 
   return (
-    <div className="w-full h-[calc(100vh-200px)] overflow-hidden lg:max-w-5xl lg:px-0 md:max-w-screen-md sm:max-w-screen-sm px-2">
+    <div className="w-full h-[calc(100vh-200px)] overflow-hidden lg:max-w-5xl lg:px-0 md:max-w-screen-md sm:max-w-screen-sm px-2 min-w-[560px]">
       <p className="pb-2">
         총 <span className="font-bold">{totalCount}</span> 개의 결과가 검색
         되었습니다.
@@ -20,11 +20,13 @@ export default function WebBottomContent() {
       <div className="w-full overflow-y-auto grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-4">
         {flattenedItems.map((innerData, index) => (
           <div
-            className="px-3 py-2 bg-white rounded-lg"
+            className="p-3 bg-white rounded-lg"
             key={index}
           >
-            <h5 className="truncate font-bold mb-3">{innerData.title}</h5>
-            <p className="truncate">
+            <h5 className="truncate font-bold pb-2 border-b">
+              {innerData.title}
+            </h5>
+            <p className="truncate pt-2">
               {innerData.urlText
                 .split(searchKeyword)
                 .map((innerItem, index) => {
