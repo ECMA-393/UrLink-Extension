@@ -28,7 +28,7 @@ export default function WebSideSearchHistory() {
     });
   };
 
-  const hendleDeleteAndSortHistory = (keyword) => {
+  const handleDeleteAndSortHistory = (keyword) => {
     const deleteAndSortHistory = sortedHistory.filter(
       (innerData) => innerData.keyword !== keyword
     );
@@ -41,16 +41,16 @@ export default function WebSideSearchHistory() {
       <h2 className="mb-5 font-bold">Extension Search History</h2>
       <SearchHistoryBox
         sortedHistory={sortedHistory}
-        hendleDeleteAndSortHistory={hendleDeleteAndSortHistory}
+        handleDeleteAndSortHistory={handleDeleteAndSortHistory}
       />
     </div>
   );
 }
 
-function SearchHistoryBox({ sortedHistory, hendleDeleteAndSortHistory }) {
+function SearchHistoryBox({ sortedHistory, handleDeleteAndSortHistory }) {
   const { setFilteredData, setReSearchKeyword } = useContext(WebSearchContext);
 
-  const hendleShowHistorySearchData = (keyword, innerData) => {
+  const handleShowHistorySearchData = (keyword, innerData) => {
     setReSearchKeyword(keyword);
     setFilteredData(innerData);
   };
@@ -62,12 +62,12 @@ function SearchHistoryBox({ sortedHistory, hendleDeleteAndSortHistory }) {
           className="w-full bg-white mb-3 px-3 py-2 rounded-lg relative cursor-pointer"
           key={index}
           onClick={() =>
-            hendleShowHistorySearchData(innerData.keyword, innerData)
+            handleShowHistorySearchData(innerData.keyword, innerData)
           }
         >
           <span
             className="absolute top-[10px] right-[10px] text-red-600"
-            onClick={() => hendleDeleteAndSortHistory(innerData.keyword)}
+            onClick={() => handleDeleteAndSortHistory(innerData.keyword)}
           >
             <FontAwesomeIcon icon={faXmark} />
           </span>

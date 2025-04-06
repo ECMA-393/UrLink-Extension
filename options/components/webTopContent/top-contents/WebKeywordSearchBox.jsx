@@ -40,10 +40,41 @@ export default function WebKeywordSearchBox() {
 }
 
 function SearchOptionButton({ iconType }) {
+  const { reSearchKeyword, filteredData, setFilteredData } =
+    useContext(WebSearchContext);
+
+  const handleReSearchResults = () => {
+    const copiedData = JSON.parse(JSON.stringify(filteredData.data));
+    const historyArray = [];
+    const seenUrls = new Set();
+
+    copiedData.forEach((innerData) => {
+      Object.values(innerData).forEach((data) => {
+        data.urlAllText.forEach((objectItem) => {
+          if (objectItem.includes(reSearchKeyword)) {
+            if (!seenUrls.has(data.url)) {
+              seenUrls.add(data.url);
+              historyArray.push({ [data.url]: data });
+            }
+          }
+        });
+      });
+    });
+
+    const reTimestamp = new Date().getTime();
+    const item = {
+      keyword: reSearchKeyword,
+      data: historyArray,
+      maxTimestamp: reTimestamp,
+    };
+    setFilteredData(item);
+  };
+
   return (
     <button
       className="w-[40px] h-10 bg-transparent text-white text-center"
       type={iconType === "faRotate" ? "reset" : ""}
+      onClick={handleReSearchResults}
     >
       <FontAwesomeIcon icon={iconType} />
     </button>
