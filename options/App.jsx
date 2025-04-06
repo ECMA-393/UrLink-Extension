@@ -7,7 +7,7 @@ function App() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [reSearchKeyword, setReSearchKeyword] = useState(searchKeyword);
 
-  const [filteredData, setFilteredData] = useState({});
+  const [filteredData, setFilteredData] = useState({ data: [] });
   const [sortedHistory, setSortedHistory] = useState([]);
 
   const fetchStorageData = () => {

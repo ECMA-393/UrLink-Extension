@@ -4,12 +4,12 @@ import { WebSearchContext } from "../../context/WebSearchContext";
 
 export default function WebBottomContent() {
   const { filteredData, searchKeyword } = useContext(WebSearchContext);
-  const changeArrayFilteredData = Object.values(filteredData);
+  const changeArrayFilteredData = Object.values(filteredData.data);
 
-  const flattenedItems = changeArrayFilteredData.flatMap((itemObj) =>
-    Object.values(itemObj).map((item) => Object.values(item)[0])
+  const flattenedItems = changeArrayFilteredData.map(
+    (itemObj) => Object.values(itemObj)[0]
   );
-  const totalCount = flattenedItems.length;
+  const totalCount = changeArrayFilteredData.length;
 
   return (
     <div className="w-full h-[calc(100vh-200px)] overflow-hidden lg:max-w-5xl lg:px-0 md:max-w-screen-md sm:max-w-screen-sm px-2">
