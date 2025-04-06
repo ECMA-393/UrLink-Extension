@@ -48,12 +48,22 @@ export default function WebSideSearchHistory() {
 }
 
 function SearchHistoryBox({ sortedHistory, hendleDeleteAndSortHistory }) {
+  const { setFilteredData, setReSearchKeyword } = useContext(WebSearchContext);
+
+  const hendleShowHistorySearchData = (keyword, innerData) => {
+    setReSearchKeyword(keyword);
+    setFilteredData(innerData);
+  };
+
   return (
     <>
       {sortedHistory.map((innerData, index) => (
         <div
           className="w-full bg-white mb-3 px-3 py-2 rounded-lg relative cursor-pointer"
           key={index}
+          onClick={() =>
+            hendleShowHistorySearchData(innerData.keyword, innerData)
+          }
         >
           <span
             className="absolute top-[10px] right-[10px] text-red-600"

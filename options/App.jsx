@@ -51,6 +51,7 @@ function App() {
     <WebSearchContext.Provider
       value={{
         filteredData,
+        setFilteredData,
         sortedHistory,
         searchKeyword,
         reSearchKeyword,
