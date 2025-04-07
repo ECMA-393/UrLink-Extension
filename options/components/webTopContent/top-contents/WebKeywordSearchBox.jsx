@@ -1,38 +1,44 @@
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { WebSearchContext } from "../../../context/WebSearchContext";
 
 export default function WebKeywordSearchBox() {
   const { reSearchKeyword, setReSearchKeyword, filteredData, setFilteredData } =
     useContext(WebSearchContext);
+  const [userInputText, setUserInputText] = useState(reSearchKeyword);
+
+  useEffect(() => {
+    setUserInputText(reSearchKeyword);
+  }, [reSearchKeyword]);
 
   const handleChangeReSearchKeyword = (event) => {
-    setReSearchKeyword(event.target.value);
+    setUserInputText(event.target.value);
   };
 
   const handleReSearchResults = () => {
+    setReSearchKeyword(userInputText);
+
     const copiedData = JSON.parse(JSON.stringify(filteredData.data));
     const historyArray = [];
     const seenUrls = new Set();
 
     copiedData.forEach((innerData) => {
       Object.values(innerData).forEach((data) => {
-        data.urlAllText.forEach((objectItem) => {
-          if (objectItem.includes(reSearchKeyword)) {
-            if (!seenUrls.has(data.url)) {
-              seenUrls.add(data.url);
-              historyArray.push({ [data.url]: data });
-            }
-          }
-        });
+        const match = data.urlAllText.some((text) =>
+          text.includes(userInputText)
+        );
+        if (match && !seenUrls.has(data.url)) {
+          seenUrls.add(data.url);
+          historyArray.push({ [data.url]: data });
+        }
       });
     });
 
     const reTimestamp = new Date().getTime();
     const item = {
-      keyword: reSearchKeyword,
+      keyword: userInputText,
       data: historyArray,
       maxTimestamp: reTimestamp,
     };
@@ -62,7 +68,7 @@ export default function WebKeywordSearchBox() {
           className="bg-transparent ps-3 h-10 text-sm placeholder-white grow outline-none"
           name="searchBox"
           type="text"
-          value={reSearchKeyword}
+          value={userInputText}
           onChange={handleChangeReSearchKeyword}
           onKeyDown={handleEnterSearch}
           placeholder="키워드를 입력해 주세요."
@@ -80,7 +86,7 @@ function SearchOptionButton({ iconType, onClickEvent }) {
   return (
     <button
       className="w-[40px] h-10 bg-transparent text-white text-center"
-      type={iconType}
+      type="button"
       onClick={onClickEvent}
     >
       <FontAwesomeIcon icon={iconType} />

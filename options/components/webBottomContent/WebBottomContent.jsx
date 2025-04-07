@@ -3,8 +3,10 @@ import { useContext } from "react";
 import { WebSearchContext } from "../../context/WebSearchContext";
 
 export default function WebBottomContent() {
-  const { filteredData, searchKeyword } = useContext(WebSearchContext);
+  const { filteredData, searchKeyword, reSearchKeyword } =
+    useContext(WebSearchContext);
   const changeArrayFilteredData = Object.values(filteredData.data);
+  const userSearchKeyword = reSearchKeyword ? reSearchKeyword : searchKeyword;
 
   const flattenedItems = changeArrayFilteredData.map(
     (itemObj) => Object.values(itemObj)[0]
@@ -28,7 +30,7 @@ export default function WebBottomContent() {
             </h5>
             <p className="truncate pt-2">
               {innerData.urlText
-                .split(searchKeyword)
+                .split(userSearchKeyword)
                 .map((innerItem, index) => {
                   if (innerItem === "") {
                     return;
@@ -37,7 +39,7 @@ export default function WebBottomContent() {
                     <span key={index}>
                       {index > 0 && (
                         <span className="bg-blue-800 rounded-lg px-1 inline-block text-white mx-px">
-                          {searchKeyword}
+                          {userSearchKeyword}
                         </span>
                       )}
                       {innerItem}

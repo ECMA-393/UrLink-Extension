@@ -30,7 +30,7 @@ function App() {
         if (maxTimestampForCategory > overallMaxTimestamp) {
           overallMaxTimestamp = maxTimestampForCategory;
           latestItem = item;
-          setSearchKeyword(`${keyword}`);
+          setSearchKeyword(keyword);
         }
       });
 
