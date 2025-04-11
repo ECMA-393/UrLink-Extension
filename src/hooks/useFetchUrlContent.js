@@ -83,7 +83,12 @@ const useFetchUrlContent = () => {
           const fetchUrl = URL_TEMPLATES[searchMode](encodedUrl, searchKeyword);
 
           if (searchKeyword) {
-            return fetch(fetchUrl);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 7000);
+
+            return fetch(fetchUrl, { signal: controller.signal }).finally(() =>
+              clearTimeout(timeoutId)
+            );
           }
         });
 

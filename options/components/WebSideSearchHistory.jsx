@@ -48,11 +48,13 @@ export default function WebSideSearchHistory() {
 }
 
 function SearchHistoryBox({ sortedHistory, handleDeleteAndSortHistory }) {
-  const { setFilteredData, setReSearchKeyword } = useContext(WebSearchContext);
+  const { setFilteredData, setReSearchKeyword, setSearchedList } =
+    useContext(WebSearchContext);
 
   const handleShowHistorySearchData = (keyword, innerData) => {
     setReSearchKeyword(keyword);
     setFilteredData(innerData);
+    setSearchedList([keyword]);
   };
 
   return (
@@ -84,6 +86,7 @@ function SearchHistoryBox({ sortedHistory, handleDeleteAndSortHistory }) {
           </p>
         </div>
       ))}
+      {sortedHistory.length === 0 && <p>검색 내역이 없습니다.</p>}
     </>
   );
 }

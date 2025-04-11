@@ -5,13 +5,26 @@ import { useContext, useEffect, useState } from "react";
 import { WebSearchContext } from "../../../context/WebSearchContext";
 
 export default function WebKeywordSearchBox() {
-  const { reSearchKeyword, setReSearchKeyword, filteredData, setFilteredData } =
-    useContext(WebSearchContext);
+  const {
+    reSearchKeyword,
+    setReSearchKeyword,
+    filteredData,
+    setFilteredData,
+    searchedList,
+    setSearchedList,
+  } = useContext(WebSearchContext);
   const [userInputText, setUserInputText] = useState(reSearchKeyword);
 
   useEffect(() => {
     setUserInputText(reSearchKeyword);
-  }, [reSearchKeyword]);
+    setSearchedList((state) => {
+      if (state[state.length - 1] === reSearchKeyword) {
+        return state;
+      } else {
+        return [...state, reSearchKeyword];
+      }
+    });
+  }, [reSearchKeyword, setSearchedList]);
 
   const handleChangeReSearchKeyword = (event) => {
     setUserInputText(event.target.value);
@@ -47,6 +60,7 @@ export default function WebKeywordSearchBox() {
 
   const handleEnterSearch = (event) => {
     if (event.key === "Enter") {
+      event.preventDefault();
       handleReSearchResults();
     }
   };
@@ -57,6 +71,14 @@ export default function WebKeywordSearchBox() {
         <span>Urlink ::</span>
         <span>WEB VIEW</span>
       </h2>
+      <h3 className="mb-1 mx-2 font-bold">
+        {searchedList.length > 0 &&
+          searchedList.map((searched) => {
+            if (searched) {
+              return <span key={searched}>{searched} &gt; </span>;
+            }
+          })}
+      </h3>
       <p className="relative flex-1 h-10 rounded-lg bg-black text-white flex">
         <label
           className="absolute left-0 -z-50 invisible"

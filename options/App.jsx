@@ -9,6 +9,7 @@ function App() {
 
   const [filteredData, setFilteredData] = useState({ data: [] });
   const [sortedHistory, setSortedHistory] = useState([]);
+  const [searchedList, setSearchedList] = useState([]);
 
   const fetchStorageData = () => {
     chrome.storage.local.get(null, (items) => {
@@ -36,8 +37,8 @@ function App() {
 
       historyArray.sort((a, b) => b.maxTimestamp - a.maxTimestamp);
 
-      setFilteredData(latestItem);
-      setSortedHistory(historyArray);
+      setFilteredData(latestItem || {});
+      setSortedHistory(historyArray || []);
     });
   };
 
@@ -59,6 +60,8 @@ function App() {
         reSearchKeyword,
         setReSearchKeyword,
         setSortedHistory,
+        searchedList,
+        setSearchedList,
         refreshHistory: fetchStorageData,
       }}
     >
